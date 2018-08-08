@@ -1,0 +1,11 @@
+---
+CPU:
+  Min: 1
+  Max: 1
+Memory:
+  Min: 1
+  Max: 1
+Audit: false
+Ignored:
+  - "test1"
+  - "test2"
