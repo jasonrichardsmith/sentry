@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/jasonrichardsmith/limitsentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	corev1 "k8s.io/api/core/v1"
@@ -96,10 +97,14 @@ func main() {
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{sCert},
 	}
-
+	s := sentry.New()
+	err = s.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 	server := &http.Server{
 		Handler: Handler{
-			ac: sentry.New(),
+			ac: &s,
 		},
 		Addr:      ":443",
 		TLSConfig: tlsConfig,

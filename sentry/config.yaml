@@ -5,7 +5,7 @@ CPU:
 Memory:
   Min: 1
   Max: 1
-Audit: false
+Audit: true
 Ignored:
   - "test1"
   - "test2"

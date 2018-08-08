@@ -9,18 +9,8 @@ import (
 )
 
 type Config struct {
-	CPU struct {
-		Min    string            `yaml:"Min"`
-		Max    string            `yaml:"Max"`
-		qtyMin resource.Quantity `yaml:"-"`
-		qtyMax resource.Quantity `yaml:"-"`
-	} `yaml:"CPU"`
-	Memory struct {
-		Min    string            `yaml:"Min"`
-		Max    string            `yaml:"Max"`
-		qtyMin resource.Quantity `yaml:"-"`
-		qtyMax resource.Quantity `yaml:"-"`
-	} `yaml:"Memory"`
+	CPU     *MinMax  `yaml:"CPU"`
+	Memory  *MinMax  `yaml:"Memory"`
 	Audit   bool     `yaml:"Audit"`
 	Ignored []string `yaml:"Ignored"`
 }
@@ -53,35 +43,40 @@ func (c *Config) Load() error {
 }
 
 func (c *Config) SetResources() (err error) {
-	c.CPU.qtyMax, err = resource.ParseQuantity(c.CPU.Max)
-	if err != nil {
-		return err
+	if c.Memory != nil {
+		err = c.Memory.SetResources()
+		if err != nil {
+			return err
+		}
 	}
-	c.CPU.qtyMin, err = resource.ParseQuantity(c.CPU.Min)
-	if err != nil {
-		return err
+	if c.CPU != nil {
+		return c.CPU.SetResources()
 	}
-	c.Memory.qtyMax, err = resource.ParseQuantity(c.Memory.Max)
-	if err != nil {
-		return err
-	}
-	c.Memory.qtyMin, err = resource.ParseQuantity(c.Memory.Min)
-	return err
+	return nil
 }
 
 func (c *Config) Unmarshal(b []byte) error {
 	return yaml.Unmarshal(b, c)
 }
 
-func (c *Config) ValidMemory(q resource.Quantity) bool {
-	if c.Memory.qtyMax.Cmp(q) >= 0 && c.Memory.qtyMin.Cmp(q) <= 0 {
-		return true
-	}
-	return false
+type MinMax struct {
+	Min    string            `yaml:"Min"`
+	Max    string            `yaml:"Max"`
+	qtyMin resource.Quantity `yaml:"-"`
+	qtyMax resource.Quantity `yaml:"-"`
 }
 
-func (c *Config) ValidCPU(q resource.Quantity) bool {
-	if c.CPU.qtyMax.Cmp(q) >= 0 && c.CPU.qtyMin.Cmp(q) <= 0 {
+func (mm *MinMax) SetResources() (err error) {
+	mm.qtyMax, err = resource.ParseQuantity(mm.Max)
+	if err != nil {
+		return err
+	}
+	mm.qtyMin, err = resource.ParseQuantity(mm.Min)
+	return err
+}
+
+func (mm *MinMax) Between(q resource.Quantity) bool {
+	if mm.qtyMax.Cmp(q) >= 0 && mm.qtyMin.Cmp(q) <= 0 {
 		return true
 	}
 	return false
