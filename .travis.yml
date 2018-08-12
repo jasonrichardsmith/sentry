@@ -2,6 +2,10 @@ language: go
 go: 1.10
 services:
 - docker
+before_install:
+  - go get github.com/mattn/goveralls
 script: 
+  - $HOME/gopath/bin/goveralls -v -service=travis-ci
+after_success:
   - make build
   - make push 
