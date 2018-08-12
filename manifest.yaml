@@ -36,10 +36,41 @@ spec:
             - name: webhook-certs
               mountPath: /etc/webhook/certs
               readOnly: true
+            - name: config
+              mountPath: /config.yaml
+              subPath: config.yaml
+              readOnly: true
       volumes:
         - name: webhook-certs
           secret:
             secretName: sentry
+        - name: config
+          configMap:
+            name: sentry-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentry-config
+  labels:
+    name: sentry-config
+  namespace: sentry
+data:
+  config: |-
+    ---
+    sentryConfig:
+      limits:
+        enabled: true
+        cpu:
+          min: 1
+          max: 1
+        memory:
+          Min: 1
+          Max: 1
+        audit: true
+        ignoredNamespaces:
+          - "test1"
+          - "test2"
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
