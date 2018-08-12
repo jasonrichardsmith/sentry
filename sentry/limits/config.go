@@ -1,6 +1,7 @@
-package sentry
+package limits
 
 import (
+	"github.com/jasonrichardsmith/Sentry/sentry"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
@@ -14,8 +15,9 @@ type MinMax struct {
 	Max string `yaml:"Max"`
 }
 
-func (c *Config) LoadSentry() (LimitSentry, error) {
+func (c *Config) LoadSentry() (sentry.Sentry, error) {
 	var ls LimitSentry
+	var err error
 	ls.MemoryMax, err = resource.ParseQuantity(c.Memory.Max)
 	if err != nil {
 		return ls, err

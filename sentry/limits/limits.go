@@ -1,4 +1,4 @@
-package sentry
+package limits
 
 import (
 	log "github.com/Sirupsen/logrus"
@@ -35,7 +35,7 @@ func (ls LimitSentry) BetweenMemory(q resource.Quantity) bool {
 	}
 	return false
 }
-func (ls *LimitSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+func (ls LimitSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Info("Checking limits are present")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}

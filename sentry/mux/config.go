@@ -1,10 +1,11 @@
-package sentry
+package mux
 
 import (
 	"flag"
-	"io/ioutil"
-
+	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/Sentry/sentry/limits"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 var (
@@ -23,22 +24,19 @@ type SentryConfig struct {
 	Type              string
 	Enabled           bool
 	IgnoredNamespaces []string
-	Config            *Loader
-}
-
-type Loader interface {
-	LoadSentry() (Sentry, error)
+	Config            sentry.Loader
 }
 
 func New() Config {
-	c := Config{
+	l := limits.Config{}
+	return Config{
 		Limits: SentryConfig{
-			Config: &limits.Config{},
+			Config: &l,
 		},
 	}
 }
 
-func (c *Config) LoadSentry() (SentryMux, error) {
+func (c Config) LoadSentry() (sentry.Sentry, error) {
 	var s SentryMux
 	if !flag.Parsed() {
 		flag.Parse()
@@ -47,7 +45,7 @@ func (c *Config) LoadSentry() (SentryMux, error) {
 	if err != nil {
 		return s, err
 	}
-	err := c.Unmarshal(configbytes)
+	err = c.Unmarshal(configbytes)
 	if err != nil {
 		return s, err
 	}
