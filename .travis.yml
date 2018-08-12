@@ -4,7 +4,9 @@ services:
 - docker
 before_install:
   - go get github.com/mattn/goveralls
+  - curl https://glide.sh/get | sh
 script: 
+  - glide install
   - $HOME/gopath/bin/goveralls -v -service=travis-ci
 after_success:
   - make build
