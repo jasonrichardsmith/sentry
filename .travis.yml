@@ -7,7 +7,7 @@ before_install:
   - curl https://glide.sh/get | sh
 script: 
   - glide install
-  - $HOME/gopath/bin/goveralls -v -service=travis-ci
+  - go test ./...
 after_success:
   - make build
   - make push 
