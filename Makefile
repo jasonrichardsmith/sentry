@@ -11,3 +11,7 @@ minikubecontext:
 	eval $(minikube docker-env)
 push:
 	docker push ${REPO}:${VERSION}
+dep:
+	glide install
+test: dep
+	go test ./...
