@@ -1,1 +1,1 @@
-Incubating project for LimitSentry
+Incubating project for Sentry
