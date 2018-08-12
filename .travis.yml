@@ -1,0 +1,7 @@
+language: go
+go: 1.10
+services:
+- docker
+script: 
+  - make build
+  - make push 
