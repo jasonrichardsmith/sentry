@@ -42,12 +42,24 @@ func NewFromConfig(c Config) (SentryMux, error) {
 	return sm, nil
 }
 
+func (sm sentryModule) Ignore(namespace string) bool {
+	for _, ignore := range sm.ignored {
+		if ignore == namespace {
+			return true
+
+		}
+	}
+	return false
+}
+
 func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	if sms, ok := sm.Sentries[receivedAdmissionReview.Request.Kind.Kind]; ok {
 		for _, sm := range sms {
-			ar := sm.Admit(receivedAdmissionReview)
-			if !ar.Allowed {
-				return ar
+			if !sm.Ignore(receivedAdmissionReview.Request.Namespace) {
+				ar := sm.Admit(receivedAdmissionReview)
+				if !ar.Allowed {
+					return ar
+				}
 			}
 		}
 

@@ -2,8 +2,8 @@ package mux
 
 import (
 	"flag"
+	"github.com/jasonrichardsmith/Sentry/limits"
 	"github.com/jasonrichardsmith/Sentry/sentry"
-	"github.com/jasonrichardsmith/Sentry/sentry/limits"
 	yaml "gopkg.in/yaml.v2"
 	"io/ioutil"
 )
