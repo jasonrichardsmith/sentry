@@ -11,5 +11,7 @@ before_install:
 script: 
   - make goveralls
 after_success:
-  - make build
-  - make push 
+  provider: script
+  script:
+    - make build && make push 
+  if: tag IS present
