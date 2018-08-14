@@ -15,3 +15,5 @@ dep:
 	glide install
 test: dep
 	go test ./...
+goveralls: dep
+	${GOPATH}/bin/goveralls -service=travis-ci

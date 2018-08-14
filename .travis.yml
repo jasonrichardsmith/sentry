@@ -7,8 +7,9 @@ notifications:
   email: false
 before_install:
   - curl https://glide.sh/get | sh
+  - go get github.com/mattn/goveralls
 script: 
-  - make test
+  - make goveralls
 after_success:
   - make build
   - make push 
