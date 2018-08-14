@@ -6,6 +6,7 @@ WORKDIR /go/src/github.com/jasonrichardsmith/Sentry
 COPY  . .
 RUN curl https://glide.sh/get | sh
 RUN glide install
+RUN go test ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o sentrywebhook
 
 FROM alpine:latest

@@ -3,7 +3,6 @@ package mux
 import (
 	"github.com/jasonrichardsmith/Sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
-	"reflect"
 )
 
 type sentryModule struct {
@@ -19,25 +18,16 @@ func NewFromConfig(c Config) (SentryMux, error) {
 	sm := SentryMux{
 		Sentries: make(map[string][]sentryModule),
 	}
-	v := reflect.ValueOf(c)
-	for i := 0; i < v.NumField(); i++ {
-		sc := v.Field(i).Interface().(SentryConfig)
-		if !sc.Enabled {
-			continue
-		}
-		s, err := sc.Config.LoadSentry()
+	if c.Limits.Enabled {
+		s, err := c.Limits.LoadSentry()
 		if err != nil {
 			return sm, err
 		}
 		mod := sentryModule{
 			s,
-			sc.IgnoredNamespaces,
+			c.Limits.IgnoredNamespaces,
 		}
-		if val, ok := sm.Sentries[sc.Type]; ok {
-			val = append(val, mod)
-		} else {
-			sm.Sentries[sc.Type] = []sentryModule{mod}
-		}
+		sm.Sentries[c.Limits.Type] = []sentryModule{mod}
 	}
 	return sm, nil
 }

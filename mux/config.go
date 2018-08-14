@@ -2,10 +2,11 @@ package mux
 
 import (
 	"flag"
+	"io/ioutil"
+
 	"github.com/jasonrichardsmith/Sentry/limits"
 	"github.com/jasonrichardsmith/Sentry/sentry"
 	yaml "gopkg.in/yaml.v2"
-	"io/ioutil"
 )
 
 var (
@@ -17,42 +18,27 @@ func init() {
 }
 
 type Config struct {
-	Limits SentryConfig `yaml:"limits"`
+	Limits limits.Config `yaml:"limits"`
 }
 
-type SentryConfig struct {
-	Type              string
-	Enabled           bool
-	IgnoredNamespaces []string
-	Config            sentry.Loader
-}
-
-func New() Config {
+func New() *Config {
 	l := limits.Config{}
-	return Config{
-		Limits: SentryConfig{
-			Config: &l,
-		},
+	return &Config{
+		Limits: l,
 	}
 }
 
-func (c Config) LoadSentry() (sentry.Sentry, error) {
-	var s SentryMux
+func (c *Config) LoadFromFile() error {
 	if !flag.Parsed() {
 		flag.Parse()
 	}
 	configbytes, err := ioutil.ReadFile(configfile)
 	if err != nil {
-		return s, err
+		return err
 	}
-	err = c.Unmarshal(configbytes)
-	if err != nil {
-		return s, err
-	}
-	return NewFromConfig(c)
-
+	return yaml.Unmarshal(configbytes, &c)
 }
 
-func (c *Config) Unmarshal(b []byte) error {
-	return yaml.Unmarshal(b, c)
+func (c *Config) LoadSentry() (sentry.Sentry, error) {
+	return NewFromConfig(*c)
 }

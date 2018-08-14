@@ -6,13 +6,14 @@ import (
 )
 
 type Config struct {
-	CPU    MinMax `yaml:"cpu"`
-	Memory MinMax `yaml:"memory"`
+	CPU           MinMax `yaml:"cpu"`
+	Memory        MinMax `yaml:"memory"`
+	sentry.Config `yaml:"-,inline"`
 }
 
 type MinMax struct {
-	Min string `yaml:"Min"`
-	Max string `yaml:"Max"`
+	Min string `yaml:"min"`
+	Max string `yaml:"max"`
 }
 
 func (c *Config) LoadSentry() (sentry.Sentry, error) {

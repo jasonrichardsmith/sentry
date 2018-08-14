@@ -4,15 +4,16 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"flag"
-	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
+	"net/http"
+
+	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/admission/v1beta1"
 	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"net/http"
 )
 
 func init() {
@@ -27,6 +28,12 @@ var (
 	codecs          = serializer.NewCodecFactory(scheme)
 	tlscert, tlskey string
 )
+
+type Config struct {
+	Type              string   `yaml:"type"`
+	Enabled           bool     `yaml:"enabled"`
+	IgnoredNamespaces []string `yaml:"ignoredNamespaces"`
+}
 
 type Sentry interface {
 	Admit(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
