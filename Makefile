@@ -16,5 +16,4 @@ dep:
 test: dep
 	go test ./...
 goveralls: dep
-	${GOPATH}/bin/overalls -project=github.com/go-playground/overalls -covermode=count -debug
-	${GOPATH}/bin/goveralls -coverprofile=overalls.coverprofile -service=travis-ci
+	${GOPATH}/bin/goveralls -service=travis-ci
