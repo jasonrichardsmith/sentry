@@ -6,7 +6,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/resource"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jasonrichardsmith/Sentry/limits"
 	"github.com/jasonrichardsmith/Sentry/sentry"
 )
@@ -91,8 +90,6 @@ func TestLoadSentry(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !reflect.DeepEqual(match, s) {
-		spew.Dump(match)
-		spew.Dump(s)
 		t.Fatal("Deep Equal for LoadSentry not equal")
 	}
 }
