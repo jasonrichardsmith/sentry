@@ -7,6 +7,7 @@ notifications:
   email: false
 before_install:
   - curl https://glide.sh/get | sh
+  - go get github.com/go-playground/overalls
   - go get github.com/mattn/goveralls
 script: 
   - make goveralls
