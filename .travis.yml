@@ -12,6 +12,5 @@ script:
   - make goveralls
 after_success:
   provider: script
-  script:
-    - make build && make push 
+  script: make build && make push 
   if: tag IS present
