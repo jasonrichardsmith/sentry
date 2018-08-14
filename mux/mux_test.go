@@ -1,26 +1,12 @@
 package mux
 
 import (
-	"io/ioutil"
-	"log"
 	"testing"
 
 	"github.com/jasonrichardsmith/Sentry/limits"
 	"k8s.io/api/admission/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-var (
-	testpod []byte
-)
-
-func init() {
-	var err error
-	testpod, err = ioutil.ReadFile("podtest.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 func TestIgnore(t *testing.T) {
 	sm := sentryModule{
