@@ -1,7 +1,7 @@
 package mux
 
 import (
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 )
 

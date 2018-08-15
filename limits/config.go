@@ -1,7 +1,7 @@
 package limits
 
 import (
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 

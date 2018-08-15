@@ -6,8 +6,8 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/resource"
 
-	"github.com/jasonrichardsmith/Sentry/limits"
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/limits"
+	"github.com/jasonrichardsmith/sentry/sentry"
 )
 
 func TestLoadFromFile(t *testing.T) {

@@ -3,7 +3,7 @@ package limits
 import (
 	"testing"
 
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/sentry"
 )
 
 func TestLoadSentry(t *testing.T) {

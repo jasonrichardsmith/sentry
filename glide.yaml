@@ -1,4 +1,4 @@
-package: github.com/jasonrichardsmith/Sentry
+package: github.com/jasonrichardsmith/sentry
 import:
 - package: github.com/Sirupsen/logrus
 - package: gopkg.in/yaml.v2

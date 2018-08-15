@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	log "github.com/Sirupsen/logrus"
-	"github.com/jasonrichardsmith/Sentry/mux"
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/mux"
+	"github.com/jasonrichardsmith/sentry/sentry"
 	"net/http"
 )
 

@@ -4,8 +4,8 @@ import (
 	"flag"
 	"io/ioutil"
 
-	"github.com/jasonrichardsmith/Sentry/limits"
-	"github.com/jasonrichardsmith/Sentry/sentry"
+	"github.com/jasonrichardsmith/sentry/limits"
+	"github.com/jasonrichardsmith/sentry/sentry"
 	yaml "gopkg.in/yaml.v2"
 )
 
