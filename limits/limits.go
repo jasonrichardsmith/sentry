@@ -15,6 +15,12 @@ var (
 	codecs = serializer.NewCodecFactory(scheme)
 )
 
+const (
+	LimitsNotPresent    = "LimitSentry: pod rejected because of missing limits"
+	LimitsOutsideMemory = "LimitSentry: pod rejected because some containers are outside the memory limits"
+	LimitsOutsideCPU    = "LimitSentry: pod rejected because some containers are outside the cpu limits"
+)
+
 type LimitSentry struct {
 	MemoryMin resource.Quantity
 	MemoryMax resource.Quantity
@@ -49,17 +55,17 @@ func (ls LimitSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1
 
 	reviewResponse.Allowed = true
 	if !ls.checkPodLimitsExist(pod) {
-		reviewResponse.Result = &metav1.Status{Message: "LimitSentry: pod rejected because of missing limits"}
+		reviewResponse.Result = &metav1.Status{Message: LimitsNotPresent}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
 	if !ls.checkPodLimitsMemInRange(pod) {
-		reviewResponse.Result = &metav1.Status{Message: "LimitSentry: pod rejected because some containers are outside the memory limits"}
+		reviewResponse.Result = &metav1.Status{Message: LimitsOutsideMemory}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
 	if !ls.checkPodLimitsCPUInRange(pod) {
-		reviewResponse.Result = &metav1.Status{Message: "LimitSentry: pod rejected because some containers are outside the cpu limits"}
+		reviewResponse.Result = &metav1.Status{Message: LimitsOutsideCPU}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
