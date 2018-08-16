@@ -3,6 +3,7 @@ package limits
 import (
 	"io/ioutil"
 	"log"
+	"strings"
 	"testing"
 
 	"k8s.io/api/admission/v1beta1"
@@ -136,5 +137,10 @@ func TestAdmit(t *testing.T) {
 	}
 	if resp.Result.Message != LimitsNotPresent {
 		t.Fatal("Expected limits not set error message")
+	}
+	ar.Request.Object.Raw = podpass[0:5]
+	resp = ls.Admit(ar)
+	if !strings.Contains(resp.Result.Message, "json parse error") {
+		t.Fatal("Expecting json parse error")
 	}
 }

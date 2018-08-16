@@ -3,6 +3,7 @@ package healthz
 import (
 	"io/ioutil"
 	"log"
+	"strings"
 	"testing"
 
 	"k8s.io/api/admission/v1beta1"
@@ -32,7 +33,11 @@ func init() {
 }
 
 func TestAdmit(t *testing.T) {
-	hs := HealthzSentry{}
+	c := Config{}
+	hs, err := c.LoadSentry()
+	if err != nil {
+		log.Fatal(err)
+	}
 	ar := v1beta1.AdmissionReview{
 		Request: &v1beta1.AdmissionRequest{
 			Object: runtime.RawExtension{
@@ -53,5 +58,10 @@ func TestAdmit(t *testing.T) {
 	resp = hs.Admit(ar)
 	if resp.Allowed {
 		t.Fatal("Expected no readiness to fail")
+	}
+	ar.Request.Object.Raw = podpass[0:5]
+	resp = hs.Admit(ar)
+	if !strings.Contains(resp.Result.Message, "json parse error") {
+		t.Fatal("Expecting json parse error")
 	}
 }
