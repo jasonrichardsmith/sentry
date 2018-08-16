@@ -29,6 +29,28 @@ func NewFromConfig(c Config) (SentryMux, error) {
 		}
 		sm.Sentries[c.Limits.Type] = []sentryModule{mod}
 	}
+	if c.Healthz.Enabled {
+		s, err := c.Healthz.LoadSentry()
+		if err != nil {
+			return sm, err
+		}
+		mod := sentryModule{
+			s,
+			c.Healthz.IgnoredNamespaces,
+		}
+		sm.Sentries[c.Healthz.Type] = append(sm.Sentries[c.Healthz.Type], mod)
+	}
+	if c.Images.Enabled {
+		s, err := c.Images.LoadSentry()
+		if err != nil {
+			return sm, err
+		}
+		mod := sentryModule{
+			s,
+			c.Images.IgnoredNamespaces,
+		}
+		sm.Sentries[c.Images.Type] = append(sm.Sentries[c.Images.Type], mod)
+	}
 	return sm, nil
 }
 

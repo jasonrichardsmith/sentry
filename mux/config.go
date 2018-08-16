@@ -4,6 +4,8 @@ import (
 	"flag"
 	"io/ioutil"
 
+	"github.com/jasonrichardsmith/sentry/healthz"
+	"github.com/jasonrichardsmith/sentry/images"
 	"github.com/jasonrichardsmith/sentry/limits"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	yaml "gopkg.in/yaml.v2"
@@ -18,13 +20,19 @@ func init() {
 }
 
 type Config struct {
-	Limits limits.Config `yaml:"limits"`
+	Limits  limits.Config  `yaml:"limits"`
+	Healthz healthz.Config `yaml:"healthz"`
+	Images  images.Config  `yaml:"images"`
 }
 
 func New() *Config {
 	l := limits.Config{}
+	h := healthz.Config{}
+	i := images.Config{}
 	return &Config{
-		Limits: l,
+		Limits:  l,
+		Healthz: h,
+		Images:  i,
 	}
 }
 

@@ -23,7 +23,7 @@ const (
 type ImagesSentry struct{}
 
 func (is ImagesSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
-	log.Info("Checking health checks are present")
+	log.Info("Checking image tags are present")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}
 	deserializer := codecs.UniversalDeserializer()
