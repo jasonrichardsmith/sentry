@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-VERSION="0.5"
+VERSION="0.1"
 REPO="jasonrichardsmith/sentry"
 
 build:
