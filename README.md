@@ -5,11 +5,86 @@
 
 # Sentry
 
-Sentry is a Webhook Admission Controller that enforces rules on objects in Kubernetes prior to admission.
+Sentry is a Webhook Validating Admission Controller that enforces rules cluster wide on objects in Kubernetes prior to admission.
+
+This project is in Beta Release
 
 ## Rules
 
-Sentry currently supports the following rules:
+Sentry currently supports the below enforcement rules.
+
+If they are not set in the config.yaml with enabled, they will not be enforced.
+
+Each can ignore a set of namespaces.
+
+"type" targets the Kuberentes object type.
+
 
 ### Limits
-Limits will insure all pods have limits for cpu and memory set.
+
+Limits will insure all pods have limits for cpu and memory set and are within the range you provide.
+
+```yaml
+limits:
+  type: Pod
+  enabled: true
+  ignoredNamespaces:
+    - "test2"
+    - "test3"
+  cpu:
+    min: 1G
+    max: 1G
+  memory:
+    min: 2G
+    max: 2G
+```
+ 
+### Healthz
+
+Healthz just insures liveliness and readiness probes are set.
+
+```yaml
+healthz:
+  type: Pod
+  enabled: true
+  ignoredNamespaces:
+    - "test1"
+    - "test3"
+```
+
+ 
+### Images
+
+Images insures no containers launch with 'latest' or with no tag set.
+
+```yaml
+images:
+  type: Pod
+  enabled: true
+  ignoredNamespaces:
+    - "test1"
+    - "test2"
+```
+ 
+## Try out sentry
+
+To build and test in minikube you can run
+
+```bash
+$ minikube start --kubernetes-version v1.11.1
+$ make minikube
+```
+
+Please use Kubernetes version >= 1.1.0
+
+This will build a container from on your minikube server.
+
+You can deploy by running:
+
+```bash
+$ make deployk8s
+```
+
+To see the tests working you can deploy any of the manifests under the test-manifests folder.
+
+

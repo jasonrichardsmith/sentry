@@ -7,7 +7,7 @@ metadata:
 apiVersion: v1
 kind: Pod
 metadata:
-  name:      pause
+  name:      latesttag
   namespace: test3
   labels:
     test: label

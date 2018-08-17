@@ -11,6 +11,4 @@ before_install:
 script: 
   - make goveralls
 after_success:
-  provider: script
-  script: make build && make push 
-  if: tag IS present
+  - test -n "$TRAVIS_TAG" && make build && make push 
