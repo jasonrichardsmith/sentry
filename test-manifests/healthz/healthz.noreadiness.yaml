@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name:      pause
+  namespace: test2
+  labels:
+    test: label
+spec:
+  containers:
+    - name:  pause
+      image: k8s.gcr.io/pause
+      livenessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 15
+        periodSeconds: 20
