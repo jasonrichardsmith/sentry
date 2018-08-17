@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: jasonrichardsmith/sentry:0.1
+          image: jasonrichardsmith/sentry:0.5
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: webhook-certs
@@ -56,21 +56,32 @@ metadata:
     name: sentry-config
   namespace: sentry
 data:
-  config: |-
+  config.yaml: |
     ---
-    sentryConfig:
-      limits:
-        enabled: true
-        cpu:
-          min: 1
-          max: 1
-        memory:
-          Min: 1
-          Max: 1
-        audit: true
-        ignoredNamespaces:
-          - "test1"
-          - "test2"
+    limits:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "test2"
+        - "test3"
+      cpu:
+        min: 1G
+        max: 1G
+      memory:
+        min: 1G
+        max: 1G
+    healthz:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "test1"
+        - "test3"
+    images:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "test1"
+        - "test2" 
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
@@ -89,4 +100,4 @@ webhooks:
         apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]
-    failurePolicy: Fail
+    failurePolicy: Ignore

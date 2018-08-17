@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-VERSION="0.1"
+VERSION="0.5"
 REPO="jasonrichardsmith/sentry"
 
 build:
@@ -8,7 +8,7 @@ build:
 minikube: minikubecontext build
 
 minikubecontext:
-	eval $(minikube docker-env)
+	eval $(shell minikube docker-env)
 push:
 	docker push ${REPO}:${VERSION}
 dep:

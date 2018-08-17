@@ -24,9 +24,9 @@ func TestIgnore(t *testing.T) {
 
 func TestAdmit(t *testing.T) {
 	mux := SentryMux{
-		Sentries: map[string][]sentryModule{
-			"Pod": []sentryModule{
-				sentryModule{
+		Sentries: map[string]map[string]sentryModule{
+			"Pod": {
+				"limits": sentryModule{
 					Sentry: limits.LimitSentry{},
 					ignored: []string{
 						"test1",

@@ -20,7 +20,7 @@ func init() {
 	corev1.AddToScheme(scheme)
 	admissionregistrationv1beta1.AddToScheme(scheme)
 	flag.StringVar(&tlscert, "tlscert", "/etc/webhook/certs/cert.pem", "Location of TLS Cert file.")
-	flag.StringVar(&tlskey, "tlskey", "/etc/webhook/certs/cert.pem", "Location of TLS key file.")
+	flag.StringVar(&tlskey, "tlskey", "/etc/webhook/certs/key.pem", "Location of TLS key file.")
 }
 
 var (
@@ -62,6 +62,7 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			body = data
 		}
 	}
+	log.Info("Received request")
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
 		log.Errorf("contentType=%s, expect application/json", contentType)
@@ -69,6 +70,7 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("415 - Wrong Content Type"))
 		return
 	}
+	log.Info("Correct ContentType")
 	var admissionResponse *v1beta1.AdmissionResponse
 	receivedAdmissionReview := v1beta1.AdmissionReview{}
 	deserializer := codecs.UniversalDeserializer()
@@ -77,6 +79,7 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		admissionResponse = admissionResponseError(err)
 	} else {
 		admissionResponse = sh.Sentry.Admit(receivedAdmissionReview)
+		log.Infof("Received response of %v from sentry", admissionResponse.Allowed)
 
 	}
 	returnedAdmissionReview := v1beta1.AdmissionReview{}

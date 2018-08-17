@@ -1,6 +1,7 @@
 package mux
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 )
@@ -11,14 +12,15 @@ type sentryModule struct {
 }
 
 type SentryMux struct {
-	Sentries map[string][]sentryModule
+	Sentries map[string]map[string]sentryModule
 }
 
 func NewFromConfig(c Config) (SentryMux, error) {
 	sm := SentryMux{
-		Sentries: make(map[string][]sentryModule),
+		Sentries: make(map[string]map[string]sentryModule),
 	}
 	if c.Limits.Enabled {
+		log.Info("Limits enabled loading")
 		s, err := c.Limits.LoadSentry()
 		if err != nil {
 			return sm, err
@@ -27,9 +29,11 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			s,
 			c.Limits.IgnoredNamespaces,
 		}
-		sm.Sentries[c.Limits.Type] = []sentryModule{mod}
+		log.Info("Ignoring Namespaces ", mod.ignored)
+		sm.Sentries[c.Limits.Type] = map[string]sentryModule{"limits": mod}
 	}
 	if c.Healthz.Enabled {
+		log.Info("Healthz enabled loading")
 		s, err := c.Healthz.LoadSentry()
 		if err != nil {
 			return sm, err
@@ -38,9 +42,15 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			s,
 			c.Healthz.IgnoredNamespaces,
 		}
-		sm.Sentries[c.Healthz.Type] = append(sm.Sentries[c.Healthz.Type], mod)
+		log.Info("Ignoring Namespaces ", mod.ignored)
+		if v, ok := sm.Sentries[c.Healthz.Type]; ok {
+			v["healthz"] = mod
+		} else {
+			sm.Sentries[c.Healthz.Type] = map[string]sentryModule{"healthz": mod}
+		}
 	}
 	if c.Images.Enabled {
+		log.Info("Images enabled loading")
 		s, err := c.Images.LoadSentry()
 		if err != nil {
 			return sm, err
@@ -49,30 +59,44 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			s,
 			c.Images.IgnoredNamespaces,
 		}
-		sm.Sentries[c.Images.Type] = append(sm.Sentries[c.Images.Type], mod)
+		log.Info("Ignoring Namespaces ", mod.ignored)
+		if v, ok := sm.Sentries[c.Images.Type]; ok {
+			v["images"] = mod
+		} else {
+			sm.Sentries[c.Images.Type] = map[string]sentryModule{"images": mod}
+		}
 	}
 	return sm, nil
 }
 
 func (sm sentryModule) Ignore(namespace string) bool {
+	log.Infof("Checking to see ignored namespace %v", namespace)
 	for _, ignore := range sm.ignored {
 		if ignore == namespace {
 			return true
+			log.Infof("Namespace %v ignored", namespace)
 
 		}
 	}
+	log.Infof("Namespace %v not ignored", namespace)
 	return false
 }
 
 func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+	log.Infof("Received request of kind %v", receivedAdmissionReview.Request.Kind.Kind)
 	if sms, ok := sm.Sentries[receivedAdmissionReview.Request.Kind.Kind]; ok {
-		for _, sm := range sms {
+		log.Infof("Found sentries for kind %v, itterating over %v sentries.", receivedAdmissionReview.Request.Kind.Kind, len(sms))
+		for k, sm := range sms {
 			if !sm.Ignore(receivedAdmissionReview.Request.Namespace) {
+				log.Infof("Running admit for %v", k)
 				ar := sm.Admit(receivedAdmissionReview)
 				if !ar.Allowed {
+					log.Infof("Not allowed by %v", k)
 					return ar
 				}
+				log.Infof("Allowed by %v", k)
 			}
+
 		}
 
 	}

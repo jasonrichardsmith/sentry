@@ -6,6 +6,8 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/resource"
 
+	"github.com/jasonrichardsmith/sentry/healthz"
+	"github.com/jasonrichardsmith/sentry/images"
 	"github.com/jasonrichardsmith/sentry/limits"
 	"github.com/jasonrichardsmith/sentry/sentry"
 )
@@ -21,6 +23,26 @@ func TestLoadFromFile(t *testing.T) {
 				Min: "1G",
 				Max: "1G",
 			},
+			Config: sentry.Config{
+				Type:    "Pod",
+				Enabled: true,
+				IgnoredNamespaces: []string{
+					"test2",
+					"test3",
+				},
+			},
+		},
+		Healthz: healthz.Config{
+			Config: sentry.Config{
+				Type:    "Pod",
+				Enabled: true,
+				IgnoredNamespaces: []string{
+					"test1",
+					"test3",
+				},
+			},
+		},
+		Images: images.Config{
 			Config: sentry.Config{
 				Type:    "Pod",
 				Enabled: true,
@@ -67,9 +89,9 @@ func TestLoadSentry(t *testing.T) {
 		t.Fatal(err)
 	}
 	match := SentryMux{
-		Sentries: map[string][]sentryModule{
-			"Pod": []sentryModule{
-				sentryModule{
+		Sentries: map[string]map[string]sentryModule{
+			"Pod": map[string]sentryModule{
+				"limits": sentryModule{
 					Sentry: limits.LimitSentry{
 						MemoryMin: qty,
 						MemoryMax: qty,

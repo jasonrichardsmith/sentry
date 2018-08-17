@@ -2,10 +2,11 @@ package main
 
 import (
 	"flag"
+	"net/http"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/jasonrichardsmith/sentry/mux"
 	"github.com/jasonrichardsmith/sentry/sentry"
-	"net/http"
 )
 
 var (
@@ -18,7 +19,12 @@ func init() {
 
 func main() {
 	config := mux.New()
-	s, err := config.LoadSentry()
+	var s sentry.Sentry
+	err := config.LoadFromFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+	s, err = config.LoadSentry()
 	if err != nil {
 		log.Fatal(err)
 	}
