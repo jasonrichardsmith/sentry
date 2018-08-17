@@ -32,10 +32,10 @@ limits:
     - "test2"
     - "test3"
   cpu:
-    min: 1G
-    max: 1G
+    min: "1"
+    max: "2"
   memory:
-    min: 2G
+    min: 1G
     max: 2G
 ```
  
