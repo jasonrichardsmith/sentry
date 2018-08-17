@@ -39,6 +39,22 @@ limits:
     max: 2G
 ```
  
+### Domains
+
+Domains insures images are only pulled from allowed domains.
+
+```yaml
+domains:
+  type: Pod
+  enabled: true
+  ignoredNamespaces:
+    - "test2"
+    - "test3"
+  allowedDomains:
+    - "thisdomain/isallowed"
+    - "sois/thisone"
+```
+
 ### Healthz
 
 Healthz just insures liveliness and readiness probes are set.

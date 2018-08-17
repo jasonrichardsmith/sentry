@@ -66,6 +66,23 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			sm.Sentries[c.Images.Type] = map[string]sentryModule{"images": mod}
 		}
 	}
+	if c.Domains.Enabled {
+		log.Info("Domains enabled loading")
+		s, err := c.Domains.LoadSentry()
+		if err != nil {
+			return sm, err
+		}
+		mod := sentryModule{
+			s,
+			c.Domains.IgnoredNamespaces,
+		}
+		log.Info("Ignoring Namespaces ", mod.ignored)
+		if v, ok := sm.Sentries[c.Domains.Type]; ok {
+			v["domains"] = mod
+		} else {
+			sm.Sentries[c.Domains.Type] = map[string]sentryModule{"domains": mod}
+		}
+	}
 	return sm, nil
 }
 
