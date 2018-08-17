@@ -32,6 +32,10 @@ spec:
         - name: webhook
           image: jasonrichardsmith/sentry:0.1
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 500Mi
+              cpu: 300m
           volumeMounts:
             - name: webhook-certs
               mountPath: /etc/webhook/certs
@@ -40,6 +44,16 @@ spec:
               mountPath: /config.yaml
               subPath: config.yaml
               readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: webhook-certs
           secret:
