@@ -87,7 +87,7 @@ data:
         - "test2" 
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
-kind: MutatingWebhookConfiguration
+kind: ValidatingWebhookConfiguration
 metadata:
   name: sentry
 webhooks:
