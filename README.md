@@ -10,10 +10,10 @@ Sentry is a Webhook Validating Admission Controller that enforces rules cluster 
 This project is in Beta Release
 
 ## Rules
-
+ 
 Sentry currently supports the below enforcement rules.
 
-If they are not set in the config.yaml with enabled, they will not be enforced.
+If they are not set in the config.yaml with "enabled" set to true, they will not be enforced.
 
 Each can ignore a set of namespaces.
 
@@ -77,7 +77,7 @@ $ make minikube
 
 Please use Kubernetes version >= 1.1.0
 
-This will build a container from on your minikube server.
+This will build a container from source on your minikube server.
 
 You can deploy by running:
 
@@ -85,6 +85,7 @@ You can deploy by running:
 $ make deployk8s
 ```
 
-To see the tests working you can deploy any of the manifests under the test-manifests folder.
+This create server certs, and makes them available in the deployment. It produces a manifest-ca.yaml which gets deployed.
 
+To see the tests working you can deploy any of the manifests under the test-manifests folder.
 
