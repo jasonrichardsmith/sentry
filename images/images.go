@@ -17,7 +17,7 @@ var (
 )
 
 const (
-	ImagesNoTag = "LimitSentry: pod rejected because of missing image tag"
+	ImagesNoTag = "ImagesSentry: pod rejected because of missing image tag"
 )
 
 type ImagesSentry struct{}
@@ -46,12 +46,14 @@ func (is *ImagesSentry) checkImageTagsExist(p corev1.Pod) bool {
 	for _, c := range p.Spec.Containers {
 		split := strings.Split(c.Image, ":")
 		if len(split) == 1 || split[1] == "latest" {
+			log.Infof("%c has no image tag or tag of latest", c.Name)
 			return false
 		}
 	}
 	for _, c := range p.Spec.InitContainers {
 		split := strings.Split(c.Image, ":")
 		if len(split) == 1 || split[1] == "latest" {
+			log.Infof("%c has no image tag or tag of latest", c.Name)
 			return false
 		}
 	}

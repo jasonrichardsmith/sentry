@@ -15,7 +15,7 @@ var (
 )
 
 const (
-	HealthzNotPresent = "LimitSentry: pod rejected because of missing health checks"
+	HealthzNotPresent = "HealthzSentry: pod rejected because of missing health checks"
 )
 
 type HealthzSentry struct{}
@@ -43,6 +43,7 @@ func (hs HealthzSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *
 func (hs *HealthzSentry) checkHealthChecksExist(p corev1.Pod) bool {
 	for _, c := range p.Spec.Containers {
 		if c.LivenessProbe == nil || c.ReadinessProbe == nil {
+			log.Infof("%c missing health or readiness", c.Name)
 			return false
 		}
 	}
