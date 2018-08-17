@@ -55,16 +55,19 @@ func (ls LimitSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1
 
 	reviewResponse.Allowed = true
 	if !ls.checkPodLimitsExist(pod) {
+		log.Info("Pod limits are not present")
 		reviewResponse.Result = &metav1.Status{Message: LimitsNotPresent}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
 	if !ls.checkPodLimitsMemInRange(pod) {
+		log.Info("Pod memory limits are not in range")
 		reviewResponse.Result = &metav1.Status{Message: LimitsOutsideMemory}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
 	if !ls.checkPodLimitsCPUInRange(pod) {
+		log.Info("Pod cpu limits are not in range")
 		reviewResponse.Result = &metav1.Status{Message: LimitsOutsideCPU}
 		reviewResponse.Allowed = false
 		return &reviewResponse
@@ -82,6 +85,7 @@ func (ls *LimitSentry) checkPodLimitsExist(p corev1.Pod) bool {
 func (ls *LimitSentry) checkContainerLimitsExist(containers []corev1.Container) bool {
 	for _, c := range containers {
 		if c.Resources.Limits.Cpu().IsZero() || c.Resources.Limits.Memory().IsZero() {
+			log.Infof("%v is missing limits", c.Name)
 			return false
 		}
 
@@ -99,6 +103,7 @@ func (ls *LimitSentry) checkPodLimitsMemInRange(p corev1.Pod) bool {
 func (ls *LimitSentry) checkContainerLimitsMemInRange(containers []corev1.Container) bool {
 	for _, c := range containers {
 		if !ls.BetweenMemory(c.Resources.Limits[corev1.ResourceMemory]) {
+			log.Infof("%v memory not in range", c.Name)
 			return false
 		}
 	}
@@ -115,6 +120,7 @@ func (ls *LimitSentry) checkPodLimitsCPUInRange(p corev1.Pod) bool {
 func (ls *LimitSentry) checkContainerLimitsCPUInRange(containers []corev1.Container) bool {
 	for _, c := range containers {
 		if !ls.BetweenCPU(c.Resources.Limits[corev1.ResourceCPU]) {
+			log.Infof("%v cpu not in range", c.Name)
 			return false
 		}
 	}

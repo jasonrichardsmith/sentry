@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: jasonrichardsmith/sentry:0.5
+          image: jasonrichardsmith/sentry:0.1
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: webhook-certs
@@ -65,11 +65,11 @@ data:
         - "test2"
         - "test3"
       cpu:
-        min: 1G
-        max: 1G
+        min: "1"
+        max: "2"
       memory:
         min: 1G
-        max: 1G
+        max: 2G
     healthz:
       type: Pod
       enabled: true

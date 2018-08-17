@@ -18,3 +18,9 @@ test: dep
 goveralls: dep
 	go test -coverprofile=coverage.out ./...
 	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
+
+deployk8s:
+	kubectl apply -f sentry-ns.yaml
+	./gen-cert.sh
+	./ca-bundle.sh
+	kubectl apply -f manifest-ca.yaml
