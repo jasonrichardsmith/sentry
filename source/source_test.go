@@ -1,4 +1,4 @@
-package domains
+package source
 
 import (
 	"io/ioutil"
@@ -29,7 +29,7 @@ func init() {
 
 func TestAdmit(t *testing.T) {
 	c := Config{
-		AllowedDomains: []string{
+		AllowedSource: []string{
 			"this/is/allowed",
 		},
 	}

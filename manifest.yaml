@@ -85,6 +85,22 @@ data:
         - "kube-system"
         - "test1"
         - "test2" 
+    images:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "kube-system"
+        - "test1"
+        - "test2" 
+    source:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "kube-system"
+        - "test1"
+        - "test2" 
+      allowed:
+        - "gcr.io"
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration

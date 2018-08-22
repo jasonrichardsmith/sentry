@@ -4,7 +4,7 @@ import (
 	"flag"
 	"io/ioutil"
 
-	"github.com/jasonrichardsmith/sentry/domains"
+	"github.com/jasonrichardsmith/sentry/source"
 	"github.com/jasonrichardsmith/sentry/healthz"
 	"github.com/jasonrichardsmith/sentry/images"
 	"github.com/jasonrichardsmith/sentry/limits"
@@ -24,14 +24,14 @@ type Config struct {
 	Limits  limits.Config  `yaml:"limits"`
 	Healthz healthz.Config `yaml:"healthz"`
 	Images  images.Config  `yaml:"images"`
-	Domains domains.Config `yaml:"domains"`
+	Domains source.Config `yaml:"source"`
 }
 
 func New() *Config {
 	l := limits.Config{}
 	h := healthz.Config{}
 	i := images.Config{}
-	d := domains.Config{}
+	d := source.Config{}
 	return &Config{
 		Limits:  l,
 		Healthz: h,

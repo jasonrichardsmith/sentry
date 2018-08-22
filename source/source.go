@@ -1,4 +1,4 @@
-package domains
+package source
 
 import (
 	log "github.com/Sirupsen/logrus"
@@ -15,15 +15,15 @@ var (
 )
 
 const (
-	DomainsUnappovedDomain = "DomainsSentry: pod rejected because image is not in allowed domains"
+	DomainsUnappovedDomain = "DomainsSentry: pod rejected because image is not in allowed source"
 )
 
 type DomainsSentry struct {
-	allowedDomains []string
+	allowedSource []string
 }
 
 func (ds DomainsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
-	log.Info("Checking domains are approved")
+	log.Info("Checking source are approved")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}
 	deserializer := codecs.UniversalDeserializer()
@@ -44,11 +44,11 @@ func (ds DomainsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *
 
 func (ds *DomainsSentry) checkImageDomainAllowed(p corev1.Pod) bool {
 	if !ds.checkImageDomainAllowedContainer(p.Spec.Containers) {
-		log.Info("Checking container domains are approved")
+		log.Info("Checking container source are approved")
 		return false
 	}
 	if !ds.checkImageDomainAllowedContainer(p.Spec.InitContainers) {
-		log.Info("Checking initcontainer domains are approved")
+		log.Info("Checking initcontainer source are approved")
 		return false
 	}
 	return true
@@ -57,14 +57,14 @@ func (ds *DomainsSentry) checkImageDomainAllowed(p corev1.Pod) bool {
 func (ds *DomainsSentry) checkImageDomainAllowedContainer(cs []corev1.Container) bool {
 	for _, c := range cs {
 		pass := false
-		for _, v := range ds.allowedDomains {
+		for _, v := range ds.allowedSource {
 			if c.Image[0:len(v)] == v {
 				log.Infof("Found approved domain %v for container %v", v, c.Image)
 				pass = true
 			}
 		}
 		if !pass {
-			log.Infof("%v has no approved domains", c.Image)
+			log.Infof("%v has no approved source", c.Image)
 			return false
 		}
 	}

@@ -39,21 +39,22 @@ limits:
     max: 2G
 ```
  
-### Domains
+### Source
 
-Domains insures images are only pulled from allowed domains.
+Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with provided matches.
 
 ```yaml
-domains:
+source:
   type: Pod
   enabled: true
   ignoredNamespaces:
     - "test2"
     - "test3"
-  allowedDomains:
+  allowed:
     - "thisdomain/isallowed"
     - "sois/thisone"
 ```
+The next itteration will provide the ability to chose your matching algorithm.
 
 ### Healthz
 

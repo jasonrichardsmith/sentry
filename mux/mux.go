@@ -78,9 +78,9 @@ func NewFromConfig(c Config) (SentryMux, error) {
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
 		if v, ok := sm.Sentries[c.Domains.Type]; ok {
-			v["domains"] = mod
+			v["source"] = mod
 		} else {
-			sm.Sentries[c.Domains.Type] = map[string]sentryModule{"domains": mod}
+			sm.Sentries[c.Domains.Type] = map[string]sentryModule{"source": mod}
 		}
 	}
 	return sm, nil
