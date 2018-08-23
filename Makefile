@@ -35,8 +35,10 @@ deploydindk8s: deployk8s
 	kubectl rollout status -w -n sentry deployment/sentry
 e2etests:
 	cd test-manifests && ./e2etest.py
-travise2e: buildhash pushhash
+travise2e:
 	./dind-cluster-v1.10.sh up 
-	sudo mv ${HOME}/.kubeadm-dind-cluster/kubectl /usr/local/bin/
+	${MAKE} buildhash
+	echo "${DOCKERPASSWORD}" | docker login -u "${DOCKERUSERNAME}" --password-stdin
+	${MAKE} pushhash
 	${MAKE} deploydindk8s
 	${MAKE} e2etests
