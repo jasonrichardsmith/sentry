@@ -9,9 +9,8 @@ notifications:
 before_install:
   - curl https://glide.sh/get | sh
   - go get github.com/mattn/goveralls
-  - wget https://cdn.rawgit.com/kubernetes-sigs/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.10.sh && \
-    chmod +x dind-cluster-v1.10.sh
-  - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.7.0/bin/linux/amd64/kubectl && \
+  - wget https://cdn.rawgit.com/kubernetes-sigs/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.10.sh
+  - chmod +x dind-cluster-v1.10.sh
 script: 
   - make goveralls
   - ./dind-cluster-v1.10.sh up 
