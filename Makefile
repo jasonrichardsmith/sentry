@@ -36,7 +36,7 @@ deploydindk8s: deployk8s
 e2etests:
 	cd test-manifests && ./e2etest.py
 travise2e: buildhash pushhash
-  ./dind-cluster-v1.10.sh up 
-  sudo mv ${HOME}/.kubeadm-dind-cluster/kubectl /usr/local/bin/
-  ${MAKE} deploydindk8s
-  ${MAKE} e2etests
+	./dind-cluster-v1.10.sh up 
+	sudo mv ${HOME}/.kubeadm-dind-cluster/kubectl /usr/local/bin/
+	${MAKE} deploydindk8s
+	${MAKE} e2etests
