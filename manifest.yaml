@@ -45,12 +45,14 @@ spec:
               subPath: config.yaml
               readOnly: true
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: 443
             initialDelaySeconds: 1
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: 443
             initialDelaySeconds: 5
             periodSeconds: 10
