@@ -1,5 +1,6 @@
 language: go
 go: 1.10.x
+sudo: true
 services:
 - docker
 install: true
@@ -11,11 +12,12 @@ before_install:
   - wget https://cdn.rawgit.com/kubernetes-sigs/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.10.sh && \
     chmod +x ./dind-cluster-v1.10.sh
   - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.7.0/bin/linux/amd64/kubectl && \
-    chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 script: 
   - make goveralls
   - ./dind-cluster-v1.10.sh up 
-  - export PATH="$HOME/.kubeadm-dind-cluster:$PATH"
-  -  
+  - sudo mv $HOME/.kubeadm-dind-cluster/kubectl /usr/local/bin/
+  - make buildhash && make pushhash
+  - make deploydindk8s
+  - make e2etests
 after_success:
   - test -n "$TRAVIS_TAG" && make build && make push 

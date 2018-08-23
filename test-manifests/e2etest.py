@@ -3,6 +3,7 @@
 import fnmatch
 import os
 import subprocess
+import sys
 
 for root, dirnames, filenames in os.walk('.'):
     for filename in fnmatch.filter(filenames, '*.yaml'):

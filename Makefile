@@ -32,3 +32,6 @@ deployk8s:
 	kubectl apply -f manifest-ca.yaml
 deploydindk8s: deployk8s
 	kubectl set image deployment/sentry -n sentry webhook=jasonrichardsmith/sentry:${HASH}
+	kubectl rollout status -w -n sentry deployment/sentry
+e2etests:
+	cd test-manifests && ./e2etest.py
