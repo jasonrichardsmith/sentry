@@ -48,12 +48,14 @@ spec:
             httpGet:
               path: /healthz
               port: 443
+              scheme: HTTPS
             initialDelaySeconds: 1
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /healthz
               port: 443
+              scheme: HTTPS
             initialDelaySeconds: 5
             periodSeconds: 10
       volumes:
