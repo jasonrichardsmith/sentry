@@ -10,6 +10,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"k8s.io/api/admission/v1beta1"
 )
 
@@ -105,4 +107,12 @@ func TestSentryHandler(t *testing.T) {
 	if rar.Response.Allowed != true {
 		t.Fatal("Expected allowed response")
 	}
+}
+
+func TestNewSentryServer(t *testing.T) {
+	ss, err := NewSentryServer(FakeSentry{})
+	if err == nil {
+		t.Fatal("expected pem error")
+	}
+	spew.Dump(ss)
 }
