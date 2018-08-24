@@ -1,6 +1,8 @@
 package sentry
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -65,6 +67,42 @@ func TestSentryHandler(t *testing.T) {
 	r.Header.Add("Content-Type", "application/json")
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, r)
-	// receivedAdmissionReview := v1beta1.AdmissionReview{}
-	// start deserialed tests
+	rar := v1beta1.AdmissionReview{}
+	data, err = ioutil.ReadAll(w.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	deserializer := codecs.UniversalDeserializer()
+	_, _, err = deserializer.Decode(data, nil, &rar)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rar.Response.Result.Message != ErrNoUID.Error() {
+		t.Fatal("Expected no uid error")
+	}
+	sar := v1beta1.AdmissionReview{
+		Request: &v1beta1.AdmissionRequest{
+			UID: "test",
+		},
+	}
+	sarbytes, err := json.Marshal(sar)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sarbytesreader := bytes.NewReader(sarbytes)
+	r = httptest.NewRequest("POST", "/", sarbytesreader)
+	r.Header.Add("Content-Type", "application/json")
+	s.ServeHTTP(w, r)
+	data, err = ioutil.ReadAll(w.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	deserializer = codecs.UniversalDeserializer()
+	_, _, err = deserializer.Decode(data, nil, &rar)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rar.Response.Allowed != true {
+		t.Fatal("Expected allowed response")
+	}
 }
