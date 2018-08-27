@@ -3,7 +3,6 @@ package mux
 import (
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jasonrichardsmith/sentry/limits"
 	"k8s.io/api/admission/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,7 +47,6 @@ func TestNewFromConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(m.Sentries[""]) != 3 {
-		spew.Dump(m)
 		t.Fatal("Extected 3 entries enabled")
 	}
 }
