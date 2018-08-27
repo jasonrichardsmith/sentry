@@ -22,12 +22,52 @@ func TestIgnore(t *testing.T) {
 	}
 }
 
+func TestNewFromConfig(t *testing.T) {
+	c := New()
+	m, err := NewFromConfig(*c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(m.Sentries) > 0 {
+		t.Fatal("Extected no entries enabled")
+	}
+	c.Limits.Enabled = true
+	c.Limits.CPU = limits.MinMax{
+		Max: "1G",
+		Min: "1G",
+	}
+	c.Limits.Memory = limits.MinMax{
+		Max: "1G",
+		Min: "1G",
+	}
+	c.Images.Enabled = true
+	c.Healthz.Enabled = true
+	m, err = NewFromConfig(*c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(m.Sentries[""]) != 3 {
+		t.Fatal("Extected 3 entries enabled")
+	}
+}
+
+type FakeSentry struct {
+	admit bool
+}
+
+func (fs FakeSentry) Admit(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+
+	reviewResponse := v1beta1.AdmissionResponse{}
+	reviewResponse.Allowed = fs.admit
+	return &reviewResponse
+}
+
 func TestAdmit(t *testing.T) {
 	mux := SentryMux{
 		Sentries: map[string]map[string]sentryModule{
 			"Pod": {
-				"limits": sentryModule{
-					Sentry: limits.LimitSentry{},
+				"fake": sentryModule{
+					Sentry: FakeSentry{true},
 					ignored: []string{
 						"test1",
 						"test2",
@@ -52,6 +92,18 @@ func TestAdmit(t *testing.T) {
 	resp = mux.Admit(ar)
 	if resp.Allowed != true {
 		t.Fatal("Return false on ignored namespace")
+	}
+	ar.Request.Namespace = "test3"
+	resp = mux.Admit(ar)
+	if resp.Allowed != true {
+		t.Fatal("Return false expected true")
+	}
+	mux.Sentries["Pod"]["fake"] = sentryModule{
+		Sentry: FakeSentry{false},
+	}
+	resp = mux.Admit(ar)
+	if resp.Allowed != false {
+		t.Fatal("Return true expected false")
 	}
 
 }
