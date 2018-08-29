@@ -34,13 +34,13 @@ var (
 )
 
 type Config struct {
-	Type              string   `yaml:"type"`
 	Enabled           bool     `yaml:"enabled"`
 	IgnoredNamespaces []string `yaml:"ignoredNamespaces"`
 }
 
 type Sentry interface {
 	Admit(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
+	Type() string
 }
 
 type Loader interface {

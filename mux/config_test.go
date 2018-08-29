@@ -24,7 +24,6 @@ func TestLoadFromFile(t *testing.T) {
 				Max: "1G",
 			},
 			Config: sentry.Config{
-				Type:    "Pod",
 				Enabled: true,
 				IgnoredNamespaces: []string{
 					"test2",
@@ -34,7 +33,6 @@ func TestLoadFromFile(t *testing.T) {
 		},
 		Healthz: healthz.Config{
 			Config: sentry.Config{
-				Type:    "Pod",
 				Enabled: true,
 				IgnoredNamespaces: []string{
 					"test1",
@@ -44,7 +42,6 @@ func TestLoadFromFile(t *testing.T) {
 		},
 		Images: images.Config{
 			Config: sentry.Config{
-				Type:    "Pod",
 				Enabled: true,
 				IgnoredNamespaces: []string{
 					"test1",
@@ -75,7 +72,6 @@ func TestLoadSentry(t *testing.T) {
 				Max: "1G",
 			},
 			Config: sentry.Config{
-				Type:    "Pod",
 				Enabled: true,
 				IgnoredNamespaces: []string{
 					"test1",
@@ -89,19 +85,17 @@ func TestLoadSentry(t *testing.T) {
 		t.Fatal(err)
 	}
 	match := SentryMux{
-		Sentries: map[string]map[string]sentryModule{
-			"Pod": map[string]sentryModule{
-				"limits": sentryModule{
-					Sentry: limits.LimitSentry{
-						MemoryMin: qty,
-						MemoryMax: qty,
-						CPUMin:    qty,
-						CPUMax:    qty,
-					},
-					ignored: []string{
-						"test1",
-						"test2",
-					},
+		Sentries: []sentryModule{
+			sentryModule{
+				Sentry: limits.LimitSentry{
+					MemoryMin: qty,
+					MemoryMax: qty,
+					CPUMin:    qty,
+					CPUMax:    qty,
+				},
+				ignored: []string{
+					"test1",
+					"test2",
 				},
 			},
 		},

@@ -15,6 +15,9 @@ import (
 
 type FakeSentry struct{}
 
+func (fs FakeSentry) Type() string {
+	return "Pod"
+}
 func (fs FakeSentry) Admit(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 
 	reviewResponse := v1beta1.AdmissionResponse{}

@@ -46,7 +46,7 @@ func TestNewFromConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(m.Sentries[""]) != 3 {
+	if len(m.Sentries) != 3 {
 		t.Fatal("Extected 3 entries enabled")
 	}
 }
@@ -55,6 +55,10 @@ type FakeSentry struct {
 	admit bool
 }
 
+func (fs FakeSentry) Type() string {
+	return "Pod"
+
+}
 func (fs FakeSentry) Admit(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 
 	reviewResponse := v1beta1.AdmissionResponse{}
@@ -64,14 +68,12 @@ func (fs FakeSentry) Admit(ar v1beta1.AdmissionReview) *v1beta1.AdmissionRespons
 
 func TestAdmit(t *testing.T) {
 	mux := SentryMux{
-		Sentries: map[string]map[string]sentryModule{
-			"Pod": {
-				"fake": sentryModule{
-					Sentry: FakeSentry{true},
-					ignored: []string{
-						"test1",
-						"test2",
-					},
+		Sentries: []sentryModule{
+			sentryModule{
+				Sentry: FakeSentry{true},
+				ignored: []string{
+					"test1",
+					"test2",
 				},
 			},
 		},
@@ -98,8 +100,10 @@ func TestAdmit(t *testing.T) {
 	if resp.Allowed != true {
 		t.Fatal("Return false expected true")
 	}
-	mux.Sentries["Pod"]["fake"] = sentryModule{
-		Sentry: FakeSentry{false},
+	mux.Sentries = []sentryModule{
+		sentryModule{
+			Sentry: FakeSentry{false},
+		},
 	}
 	resp = mux.Admit(ar)
 	if resp.Allowed != false {

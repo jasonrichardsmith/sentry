@@ -20,6 +20,10 @@ const (
 
 type HealthzSentry struct{}
 
+func (hs HealthzSentry) Type() string {
+	return "Pod"
+}
+
 func (hs HealthzSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Info("Checking health checks are present")
 	raw := receivedAdmissionReview.Request.Object.Raw
