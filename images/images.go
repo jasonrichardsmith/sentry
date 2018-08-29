@@ -22,6 +22,10 @@ const (
 
 type ImagesSentry struct{}
 
+func (is ImagesSentry) Type() string {
+	return "Pod"
+}
+
 func (is ImagesSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Info("Checking image tags are present")
 	raw := receivedAdmissionReview.Request.Object.Raw

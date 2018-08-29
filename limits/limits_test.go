@@ -58,6 +58,13 @@ func init() {
 	}
 }
 
+func TestType(t *testing.T) {
+	is := LimitSentry{}
+	if is.Type() != "Pod" {
+		t.Fatal("Failed type test")
+	}
+}
+
 func TestBetweenCPU(t *testing.T) {
 	ls := LimitSentry{
 		CPUMax: highqty,

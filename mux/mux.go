@@ -12,12 +12,12 @@ type sentryModule struct {
 }
 
 type SentryMux struct {
-	Sentries map[string]map[string]sentryModule
+	Sentries []sentryModule
 }
 
 func NewFromConfig(c Config) (SentryMux, error) {
 	sm := SentryMux{
-		Sentries: make(map[string]map[string]sentryModule),
+		Sentries: make([]sentryModule, 0),
 	}
 	if c.Limits.Enabled {
 		log.Info("Limits enabled loading")
@@ -30,7 +30,7 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			c.Limits.IgnoredNamespaces,
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries[c.Limits.Type] = map[string]sentryModule{"limits": mod}
+		sm.Sentries = append(sm.Sentries, mod)
 	}
 	if c.Healthz.Enabled {
 		log.Info("Healthz enabled loading")
@@ -43,11 +43,7 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			c.Healthz.IgnoredNamespaces,
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
-		if v, ok := sm.Sentries[c.Healthz.Type]; ok {
-			v["healthz"] = mod
-		} else {
-			sm.Sentries[c.Healthz.Type] = map[string]sentryModule{"healthz": mod}
-		}
+		sm.Sentries = append(sm.Sentries, mod)
 	}
 	if c.Images.Enabled {
 		log.Info("Images enabled loading")
@@ -60,11 +56,7 @@ func NewFromConfig(c Config) (SentryMux, error) {
 			c.Images.IgnoredNamespaces,
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
-		if v, ok := sm.Sentries[c.Images.Type]; ok {
-			v["images"] = mod
-		} else {
-			sm.Sentries[c.Images.Type] = map[string]sentryModule{"images": mod}
-		}
+		sm.Sentries = append(sm.Sentries, mod)
 	}
 	if c.Domains.Enabled {
 		log.Info("Domains enabled loading")
@@ -98,12 +90,14 @@ func (sm sentryModule) Ignore(namespace string) bool {
 	log.Infof("Namespace %v not ignored", namespace)
 	return false
 }
-
+func (sm SentryMux) Type() string {
+	return "*"
+}
 func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Infof("Received request of kind %v", receivedAdmissionReview.Request.Kind.Kind)
-	if sms, ok := sm.Sentries[receivedAdmissionReview.Request.Kind.Kind]; ok {
-		log.Infof("Found sentries for kind %v, itterating over %v sentries.", receivedAdmissionReview.Request.Kind.Kind, len(sms))
-		for k, sm := range sms {
+	log.Infof("Itterating over %v sentries.", receivedAdmissionReview.Request.Kind.Kind, len(sm.Sentries))
+	for k, sm := range sm.Sentries {
+		if receivedAdmissionReview.Request.Kind.Kind == sm.Type() {
 			if !sm.Ignore(receivedAdmissionReview.Request.Namespace) {
 				log.Infof("Running admit for %v", k)
 				ar := sm.Admit(receivedAdmissionReview)
@@ -113,7 +107,6 @@ func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1be
 				}
 				log.Infof("Allowed by %v", k)
 			}
-
 		}
 
 	}

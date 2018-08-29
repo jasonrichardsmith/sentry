@@ -28,6 +28,10 @@ type LimitSentry struct {
 	CPUMax    resource.Quantity
 }
 
+func (ls LimitSentry) Type() string {
+	return "Pod"
+}
+
 func (ls LimitSentry) BetweenCPU(q resource.Quantity) bool {
 	if ls.CPUMax.Cmp(q) >= 0 && ls.CPUMin.Cmp(q) <= 0 {
 		return true

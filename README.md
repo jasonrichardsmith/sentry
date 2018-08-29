@@ -26,7 +26,6 @@ Limits will insure all pods have limits for cpu and memory set and are within th
 
 ```yaml
 limits:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test2"
@@ -62,7 +61,6 @@ Healthz just insures liveliness and readiness probes are set.
 
 ```yaml
 healthz:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test1"
@@ -76,7 +74,6 @@ Images insures no containers launch with 'latest' or with no tag set.
 
 ```yaml
 images:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test1"

@@ -3,6 +3,7 @@ package sentry
 import (
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"flag"
 	"io/ioutil"
 	"net/http"
@@ -24,19 +25,22 @@ func init() {
 }
 
 var (
-	scheme          = runtime.NewScheme()
-	codecs          = serializer.NewCodecFactory(scheme)
-	tlscert, tlskey string
+	scheme               = runtime.NewScheme()
+	codecs               = serializer.NewCodecFactory(scheme)
+	tlscert, tlskey      string
+	healthResponse       = []byte("200 - Healthy")
+	wrongContentResponse = []byte("415 - Wrong Content Type")
+	ErrNoUID             = errors.New("No UID from request")
 )
 
 type Config struct {
-	Type              string   `yaml:"type"`
 	Enabled           bool     `yaml:"enabled"`
 	IgnoredNamespaces []string `yaml:"ignoredNamespaces"`
 }
 
 type Sentry interface {
 	Admit(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
+	Type() string
 }
 
 type Loader interface {
@@ -63,11 +67,17 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	log.Info("Received request")
+	if r.URL.Path == "/healthz" {
+		log.Info("Received health check")
+		w.WriteHeader(http.StatusOK)
+		w.Write(healthResponse)
+		return
+	}
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
 		log.Errorf("contentType=%s, expect application/json", contentType)
 		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write([]byte("415 - Wrong Content Type"))
+		w.Write(wrongContentResponse)
 		return
 	}
 	log.Info("Correct ContentType")
@@ -85,7 +95,12 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	returnedAdmissionReview := v1beta1.AdmissionReview{}
 	if admissionResponse != nil {
 		returnedAdmissionReview.Response = admissionResponse
-		returnedAdmissionReview.Response.UID = receivedAdmissionReview.Request.UID
+		if receivedAdmissionReview.Request != nil && receivedAdmissionReview.Request.UID != "" {
+			returnedAdmissionReview.Response.UID = receivedAdmissionReview.Request.UID
+		} else {
+			log.Error(ErrNoUID)
+			returnedAdmissionReview.Response = admissionResponseError(ErrNoUID)
+		}
 	}
 	responseInBytes, err := json.Marshal(returnedAdmissionReview)
 	if err != nil {

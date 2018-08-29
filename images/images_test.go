@@ -32,6 +32,13 @@ func init() {
 	}
 }
 
+func TestType(t *testing.T) {
+	is := ImagesSentry{}
+	if is.Type() != "Pod" {
+		t.Fatal("Failed type test")
+	}
+}
+
 func TestAdmit(t *testing.T) {
 	c := Config{}
 	is, err := c.LoadSentry()
