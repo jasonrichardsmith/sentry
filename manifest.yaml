@@ -80,7 +80,6 @@ data:
   config.yaml: |
     ---
     limits:
-      type: Pod
       enabled: true
       ignoredNamespaces:
         - "kube-system"
@@ -93,14 +92,12 @@ data:
         min: 1G
         max: 2G
     healthz:
-      type: Pod
       enabled: true
       ignoredNamespaces:
         - "kube-system"
         - "test1"
         - "test3"
     images:
-      type: Pod
       enabled: true
       ignoredNamespaces:
         - "kube-system"

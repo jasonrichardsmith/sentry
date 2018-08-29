@@ -32,6 +32,12 @@ func init() {
 	}
 }
 
+func TestType(t *testing.T) {
+	is := HealthzSentry{}
+	if is.Type() != "Pod" {
+		t.Fatal("Failed type test")
+	}
+}
 func TestAdmit(t *testing.T) {
 	c := Config{}
 	hs, err := c.LoadSentry()
