@@ -1,4 +1,4 @@
-package images
+package tags
 
 import (
 	"io/ioutil"
@@ -33,7 +33,7 @@ func init() {
 }
 
 func TestType(t *testing.T) {
-	is := ImagesSentry{}
+	is := TagsSentry{}
 	if is.Type() != "Pod" {
 		t.Fatal("Failed type test")
 	}
