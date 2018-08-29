@@ -33,7 +33,7 @@ func init() {
 }
 
 func TestType(t *testing.T) {
-	is := TagsSentry{}
+	ts := TagsSentry{}
 	if is.Type() != "Pod" {
 		t.Fatal("Failed type test")
 	}
