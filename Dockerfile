@@ -1,6 +1,6 @@
 # build stage
-FROM golang:alpine AS build-env
-RUN apk update && apk add curl git
+FROM golang:1.10-stretch AS build-env
+RUN apt update && apt install curl git
 RUN mkdir -p /go/src/github.com/jasonrichardsmith/sentry
 WORKDIR /go/src/github.com/jasonrichardsmith/sentry
 COPY  . .
