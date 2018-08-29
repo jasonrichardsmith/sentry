@@ -22,6 +22,12 @@ func TestIgnore(t *testing.T) {
 	}
 }
 
+func TestType(t *testing.T) {
+	is := SentryMux{}
+	if is.Type() != "*" {
+		t.Fatal("Failed type test")
+	}
+}
 func TestNewFromConfig(t *testing.T) {
 	c := New()
 	m, err := NewFromConfig(*c)
