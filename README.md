@@ -21,7 +21,7 @@ Each can ignore a set of namespaces.
 
 
 ### Limits
-
+ 
 Limits will insure all pods have limits for cpu and memory set and are within the range you provide.
 
 ```yaml
@@ -42,6 +42,8 @@ limits:
 
 Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To insure your domain is not read as a subdomain, it is best to end your domain with a "/".
 
+By listing the entire image path with or without tag, you can allow specific images from a repository. So "gcr.io/google_containers/pause-amd64" would only allow the pause container.
+
 ```yaml
 source:
   type: Pod
@@ -56,8 +58,8 @@ source:
 
 
 ### Healthz
-
-Healthz just insures liveliness and readiness probes are set.
+ 
+Healthz insures liveliness and readiness probes are set.
 
 ```yaml
 healthz:
@@ -79,9 +81,10 @@ tags:
     - "test1"
     - "test2"
 ```
- 
-## Try out sentry
 
+
+## Try out sentry
+ 
 To build and test in minikube you can run
 
 ```bash
