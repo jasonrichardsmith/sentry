@@ -4,11 +4,12 @@ about: Suggest an idea for this project
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Do you wish to add functionality to an existing sentry module?**
+Please describe functionality here.
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Do you want to see a new senry module introduced**
+Target: Kubernetes object type
+Functionality:
 
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
