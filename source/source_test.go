@@ -27,6 +27,13 @@ func init() {
 	}
 }
 
+func TestType(t *testing.T) {
+	ss := SourceSentry{}
+	if ss.Type() != "Pod" {
+		t.Fatal("Failed type test")
+	}
+}
+
 func TestAdmit(t *testing.T) {
 	c := Config{
 		AllowedSources: []string{
