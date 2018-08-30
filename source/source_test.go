@@ -29,7 +29,7 @@ func init() {
 
 func TestAdmit(t *testing.T) {
 	c := Config{
-		AllowedSource: []string{
+		AllowedSources: []string{
 			"this/is/allowed",
 		},
 	}

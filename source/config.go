@@ -5,12 +5,12 @@ import (
 )
 
 type Config struct {
-	sentry.Config `yaml:"-,inline"`
-	AllowedSource []string `yaml:"allowed"`
+	sentry.Config  `yaml:"-,inline"`
+	AllowedSources []string `yaml:"allowed"`
 }
 
 func (c *Config) LoadSentry() (sentry.Sentry, error) {
-	return DomainsSentry{
-		allowedSource: c.AllowedSource,
+	return SourceSentry{
+		allowedSources: c.AllowedSources,
 	}, nil
 }

@@ -58,22 +58,18 @@ func NewFromConfig(c Config) (SentryMux, error) {
 		log.Info("Ignoring Namespaces ", mod.ignored)
 		sm.Sentries = append(sm.Sentries, mod)
 	}
-	if c.Domains.Enabled {
-		log.Info("Domains enabled loading")
-		s, err := c.Domains.LoadSentry()
+	if c.Source.Enabled {
+		log.Info("Source enabled loading")
+		s, err := c.Source.LoadSentry()
 		if err != nil {
 			return sm, err
 		}
 		mod := sentryModule{
 			s,
-			c.Domains.IgnoredNamespaces,
+			c.Source.IgnoredNamespaces,
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
-		if v, ok := sm.Sentries[c.Domains.Type]; ok {
-			v["source"] = mod
-		} else {
-			sm.Sentries[c.Domains.Type] = map[string]sentryModule{"source": mod}
-		}
+		sm.Sentries = append(sm.Sentries, mod)
 	}
 	return sm, nil
 }

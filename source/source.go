@@ -18,11 +18,15 @@ const (
 	DomainsUnappovedDomain = "DomainsSentry: pod rejected because image is not in allowed source"
 )
 
-type DomainsSentry struct {
-	allowedSource []string
+type SourceSentry struct {
+	allowedSources []string
 }
 
-func (ds DomainsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+func (ss SourceSentry) Type() string {
+	return "Pod"
+}
+
+func (ss SourceSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Info("Checking source are approved")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}
@@ -34,7 +38,7 @@ func (ds DomainsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *
 		return &reviewResponse
 	}
 	reviewResponse.Allowed = true
-	if !ds.checkImageDomainAllowed(pod) {
+	if !ss.checkImageDomainAllowed(pod) {
 		reviewResponse.Result = &metav1.Status{Message: DomainsUnappovedDomain}
 		reviewResponse.Allowed = false
 		return &reviewResponse
@@ -42,24 +46,24 @@ func (ds DomainsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *
 	return &reviewResponse
 }
 
-func (ds *DomainsSentry) checkImageDomainAllowed(p corev1.Pod) bool {
-	if !ds.checkImageDomainAllowedContainer(p.Spec.Containers) {
+func (ss *SourceSentry) checkImageDomainAllowed(p corev1.Pod) bool {
+	if !ss.checkImageDomainAllowedContainer(p.Spec.Containers) {
 		log.Info("Checking container source are approved")
 		return false
 	}
-	if !ds.checkImageDomainAllowedContainer(p.Spec.InitContainers) {
+	if !ss.checkImageDomainAllowedContainer(p.Spec.InitContainers) {
 		log.Info("Checking initcontainer source are approved")
 		return false
 	}
 	return true
 }
 
-func (ds *DomainsSentry) checkImageDomainAllowedContainer(cs []corev1.Container) bool {
+func (ss *SourceSentry) checkImageDomainAllowedContainer(cs []corev1.Container) bool {
 	for _, c := range cs {
 		pass := false
-		for _, v := range ds.allowedSource {
+		for _, v := range ss.allowedSources {
 			if c.Image[0:len(v)] == v {
-				log.Infof("Found approved domain %v for container %v", v, c.Image)
+				log.Infof("Found approved source %v for container %v", v, c.Image)
 				pass = true
 			}
 		}
