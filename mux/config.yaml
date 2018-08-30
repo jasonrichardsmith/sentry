@@ -17,7 +17,7 @@ healthz:
   ignoredNamespaces:
     - "test1"
     - "test3"
-images:
+tags:
   type: Pod
   enabled: true
   ignoredNamespaces:

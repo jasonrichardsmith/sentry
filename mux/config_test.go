@@ -7,7 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 
 	"github.com/jasonrichardsmith/sentry/healthz"
-	"github.com/jasonrichardsmith/sentry/images"
+	"github.com/jasonrichardsmith/sentry/tags"
 	"github.com/jasonrichardsmith/sentry/limits"
 	"github.com/jasonrichardsmith/sentry/sentry"
 )
@@ -40,7 +40,7 @@ func TestLoadFromFile(t *testing.T) {
 				},
 			},
 		},
-		Images: images.Config{
+		Tags: tags.Config{
 			Config: sentry.Config{
 				Enabled: true,
 				IgnoredNamespaces: []string{

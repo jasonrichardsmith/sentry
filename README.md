@@ -51,12 +51,12 @@ healthz:
 ```
 
  
-### Images
+### Tags
 
-Images insures no containers launch with 'latest' or with no tag set.
+Tags insures no containers launch with 'latest' or with no tag set.
 
 ```yaml
-images:
+tags:
   enabled: true
   ignoredNamespaces:
     - "test1"
