@@ -45,15 +45,15 @@ func NewFromConfig(c Config) (SentryMux, error) {
 		log.Info("Ignoring Namespaces ", mod.ignored)
 		sm.Sentries = append(sm.Sentries, mod)
 	}
-	if c.Images.Enabled {
-		log.Info("Images enabled loading")
-		s, err := c.Images.LoadSentry()
+	if c.Tags.Enabled {
+		log.Info("Tags enabled loading")
+		s, err := c.Tags.LoadSentry()
 		if err != nil {
 			return sm, err
 		}
 		mod := sentryModule{
 			s,
-			c.Images.IgnoredNamespaces,
+			c.Tags.IgnoredNamespaces,
 		}
 		log.Info("Ignoring Namespaces ", mod.ignored)
 		sm.Sentries = append(sm.Sentries, mod)

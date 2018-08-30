@@ -40,7 +40,7 @@ limits:
  
 ### Source
 
-Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with provided matches.
+Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To insure your domain is not read as a subdomain, it is best to end your domain with a "/".
 
 ```yaml
 source:
@@ -53,7 +53,7 @@ source:
     - "thisdomain/isallowed"
     - "sois/thisone"
 ```
-The next itteration will provide the ability to chose your matching algorithm.
+
 
 ### Healthz
 
@@ -68,12 +68,12 @@ healthz:
 ```
 
  
-### Images
+### Tags
 
-Images insures no containers launch with 'latest' or with no tag set.
+Tags insures no containers launch with 'latest' or with no tag set.
 
 ```yaml
-images:
+tags:
   enabled: true
   ignoredNamespaces:
     - "test1"

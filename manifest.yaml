@@ -99,7 +99,7 @@ data:
         - "test1"
         - "test3"
         - "test4"
-    images:
+    tags:
       enabled: true
       ignoredNamespaces:
         - "kube-system"

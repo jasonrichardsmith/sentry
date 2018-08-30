@@ -46,7 +46,7 @@ func TestNewFromConfig(t *testing.T) {
 		Max: "1G",
 		Min: "1G",
 	}
-	c.Images.Enabled = true
+	c.Tags.Enabled = true
 	c.Healthz.Enabled = true
 	m, err = NewFromConfig(*c)
 	if err != nil {

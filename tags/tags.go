@@ -1,4 +1,4 @@
-package images
+package tags
 
 import (
 	"strings"
@@ -17,16 +17,16 @@ var (
 )
 
 const (
-	ImagesNoTag = "ImagesSentry: pod rejected because of missing image tag"
+	TagsNoTag = "TagsSentry: pod rejected because of missing image tag"
 )
 
-type ImagesSentry struct{}
+type TagsSentry struct{}
 
-func (is ImagesSentry) Type() string {
+func (is TagsSentry) Type() string {
 	return "Pod"
 }
 
-func (is ImagesSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+func (is TagsSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Info("Checking image tags are present")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}
@@ -39,14 +39,14 @@ func (is ImagesSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v
 	}
 	reviewResponse.Allowed = true
 	if !is.checkImageTagsExist(pod) {
-		reviewResponse.Result = &metav1.Status{Message: ImagesNoTag}
+		reviewResponse.Result = &metav1.Status{Message: TagsNoTag}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}
 	return &reviewResponse
 }
 
-func (is *ImagesSentry) checkImageTagsExist(p corev1.Pod) bool {
+func (is *TagsSentry) checkImageTagsExist(p corev1.Pod) bool {
 	for _, c := range p.Spec.Containers {
 		split := strings.Split(c.Image, ":")
 		if len(split) == 1 || split[1] == "latest" {
