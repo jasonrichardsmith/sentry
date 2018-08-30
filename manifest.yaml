@@ -85,6 +85,7 @@ data:
         - "kube-system"
         - "test2"
         - "test3"
+        - "test4"
       cpu:
         min: "1"
         max: "2"
@@ -97,12 +98,24 @@ data:
         - "kube-system"
         - "test1"
         - "test3"
+        - "test4"
     tags:
       enabled: true
       ignoredNamespaces:
         - "kube-system"
         - "test1"
         - "test2" 
+        - "test4"
+    source:
+      type: Pod
+      enabled: true
+      ignoredNamespaces:
+        - "kube-system"
+        - "test1"
+        - "test2" 
+        - "test3"
+      allowed:
+        - "gcr.io"
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration

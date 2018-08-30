@@ -48,12 +48,13 @@ func TestNewFromConfig(t *testing.T) {
 	}
 	c.Tags.Enabled = true
 	c.Healthz.Enabled = true
+	c.Source.Enabled = true
 	m, err = NewFromConfig(*c)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(m.Sentries) != 3 {
-		t.Fatal("Extected 3 entries enabled")
+	if len(m.Sentries) != 4 {
+		t.Fatal("Extected 4 entries enabled")
 	}
 }
 
