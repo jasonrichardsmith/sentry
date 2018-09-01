@@ -43,7 +43,6 @@ By listing the entire image path with or without tag, you can allow specific ima
 
 ```yaml
 source:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test2"
@@ -160,7 +159,7 @@ and to the mux/mux.go NewFromConfig function
 	}
 ```
 
-Hopefully (config loading will be improved)[https://github.com/jasonrichardsmith/sentry/issues/2] in the near future.
+Hopefully [config loading will be improved](https://github.com/jasonrichardsmith/sentry/issues/2) in the near future.
 
 
 You can add e2e tests by adding a folder for your module in test-manifests, and aadding manifests named in the following convention.
