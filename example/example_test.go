@@ -7,6 +7,14 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
+func TestLoadSentry(t *testing.T) {
+	c := Config{}
+	_, err := c.LoadSentry()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestType(t *testing.T) {
 	ts := ExampleSentry{}
 	if ts.Type() != "Pod" {
