@@ -110,9 +110,9 @@ make e2etests
 
 ## Development
 
-To develop a new module, you can copy over the "example" module.
+To develop a new module, you can copy over the [example](https://github.com/jasonrichardsmith/sentry/tree/example-and-typos/example) module.
 
-It will need to be added to the mux/config.go.
+It will need to be added to the [mux/config.go](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/mux/config.go).
 
 ```go
 
@@ -140,7 +140,7 @@ func New() *Config {
 }
 ```
 
-and to the mux/mux.go NewFromConfig function
+and to the [mux/mux.go](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/mux/mux.go) NewFromConfig function
 
 ```go
 
@@ -162,7 +162,7 @@ and to the mux/mux.go NewFromConfig function
 Hopefully [config loading will be improved](https://github.com/jasonrichardsmith/sentry/issues/2) in the near future.
 
 
-You can add e2e tests by adding a folder for your module in test-manifests, and aadding manifests named in the following convention.
+You can add e2e tests by adding a folder for your module in test-manifests, and adding manifests named in the following convention.
 
 ```
 description.expectation.yaml
@@ -170,7 +170,7 @@ description.expectation.yaml
 
 Anything not titled with "pass" as an "expectation" will be expected to fail.
 
-Then make sure your module is enabled in the manifest.yaml.
+Then make sure your module is enabled in the [manifest.yaml](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/manifest.yaml).
 ```yaml
 
     example:
