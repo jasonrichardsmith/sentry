@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test3
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name:      pass
+  namespace: test3
+  labels:
+    test: label
+spec:
+  containers:
+    - name:  pause
+      image: gcr.io/google_containers/pause-amd64:3.0
