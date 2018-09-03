@@ -4,6 +4,8 @@ import (
 	"flag"
 	"net/http"
 
+	"github.com/jasonrichardsmith/sentry/config"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/jasonrichardsmith/sentry/mux"
 	"github.com/jasonrichardsmith/sentry/sentry"
@@ -18,16 +20,11 @@ func init() {
 }
 
 func main() {
-	config := mux.New()
-	var s sentry.Sentry
-	err := config.LoadFromFile()
+	err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
-	s, err = config.LoadSentry()
-	if err != nil {
-		log.Fatal(err)
-	}
+	s := mux.New(config.DefaultConfig)
 	var ss *http.Server
 	if dev {
 		ss = sentry.NewSentryServerNoSSL(s)

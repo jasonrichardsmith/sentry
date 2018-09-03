@@ -33,18 +33,9 @@ var (
 	ErrNoUID             = errors.New("No UID from request")
 )
 
-type Config struct {
-	Enabled           bool     `yaml:"enabled"`
-	IgnoredNamespaces []string `yaml:"ignoredNamespaces"`
-}
-
 type Sentry interface {
 	Admit(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
 	Type() string
-}
-
-type Loader interface {
-	LoadSentry() (Sentry, error)
 }
 
 func admissionResponseError(err error) *v1beta1.AdmissionResponse {

@@ -5,10 +5,13 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
+const (
+	NAME = "limits"
+)
+
 type Config struct {
-	CPU           MinMax `yaml:"cpu"`
-	Memory        MinMax `yaml:"memory"`
-	sentry.Config `yaml:"-,inline"`
+	CPU    MinMax `yaml:"cpu"`
+	Memory MinMax `yaml:"memory"`
 }
 
 type MinMax struct {
@@ -16,21 +19,25 @@ type MinMax struct {
 	Max string `yaml:"max"`
 }
 
-func (c *Config) LoadSentry() (sentry.Sentry, error) {
+func (c *Config) Name() string {
+	return NAME
+}
+
+func (c *Config) LoadSentry() sentry.Sentry {
 	var ls LimitSentry
 	var err error
 	ls.MemoryMax, err = resource.ParseQuantity(c.Memory.Max)
 	if err != nil {
-		return ls, err
+		return ls
 	}
 	ls.MemoryMin, err = resource.ParseQuantity(c.Memory.Min)
 	if err != nil {
-		return ls, err
+		return ls
 	}
 	ls.CPUMin, err = resource.ParseQuantity(c.CPU.Min)
 	if err != nil {
-		return ls, err
+		return ls
 	}
 	ls.CPUMax, err = resource.ParseQuantity(c.CPU.Max)
-	return ls, err
+	return ls
 }
