@@ -1,21 +1,10 @@
 package config
 
-import (
-	"testing"
+import "testing"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/jasonrichardsmith/sentry/limits"
-)
-
-func TestLoading(t *testing.T) {
-	l := limits.Config{}
-	err := Register(&l)
-	if err != nil {
-		t.Fatal(err)
+func TestNew(t *testing.T) {
+	c := New()
+	if c.Modules == nil || c.decoders == nil || c.ignored == nil {
+		t.Fatal("Not all config structures instantiated")
 	}
-	err = Load()
-	if err != nil {
-		t.Fatal(err)
-	}
-	spew.Dump(l)
 }

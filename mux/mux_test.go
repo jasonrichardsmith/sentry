@@ -3,7 +3,6 @@ package mux
 import (
 	"testing"
 
-	"github.com/jasonrichardsmith/sentry/limits"
 	"k8s.io/api/admission/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -26,36 +25,6 @@ func TestType(t *testing.T) {
 	is := SentryMux{}
 	if is.Type() != "*" {
 		t.Fatal("Failed type test")
-	}
-}
-func TestNewFromConfig(t *testing.T) {
-	c := New()
-	m, err := NewFromConfig(*c)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(m.Sentries) > 0 {
-		t.Fatal("Extected no entries enabled")
-	}
-	c.Limits.Enabled = true
-	c.Limits.CPU = limits.MinMax{
-		Max: "1G",
-		Min: "1G",
-	}
-	c.Limits.Memory = limits.MinMax{
-		Max: "1G",
-		Min: "1G",
-	}
-	c.Tags.Enabled = true
-	c.Healthz.Enabled = true
-	c.Source.Enabled = true
-	c.Example.Enabled = true
-	m, err = NewFromConfig(*c)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(m.Sentries) != 5 {
-		t.Fatal("Extected 4 entries enabled")
 	}
 }
 
