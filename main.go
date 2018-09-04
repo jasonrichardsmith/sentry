@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/jasonrichardsmith/sentry/config"
+	_ "github.com/jasonrichardsmith/sentry/limits"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/jasonrichardsmith/sentry/mux"

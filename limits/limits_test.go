@@ -66,14 +66,17 @@ func TestType(t *testing.T) {
 }
 
 func TestBetweenCPU(t *testing.T) {
-	ls := LimitSentry{
-		CPUMax: highqty,
-		CPUMin: lowqty,
+	c := Config{
+		CPU: MinMax{
+			Max: highqty,
+			Min: lowqty,
+		},
 	}
+	ls := c.LoadSentry().(LimitSentry)
 	if !ls.BetweenCPU(test) {
 		t.Error("expected qty for CPU to be in between")
 	}
-	ls.CPUMax = lowqty
+	ls.CPU.Max = lowqty
 	if ls.BetweenCPU(test) {
 		t.Error("expected qty for CPU to not be in between")
 	}
@@ -81,14 +84,17 @@ func TestBetweenCPU(t *testing.T) {
 }
 
 func TestBetweenMemory(t *testing.T) {
-	ls := LimitSentry{
-		MemoryMax: highqty,
-		MemoryMin: lowqty,
+	c := Config{
+		Memory: MinMax{
+			Max: highqty,
+			Min: lowqty,
+		},
 	}
+	ls := c.LoadSentry().(LimitSentry)
 	if !ls.BetweenMemory(test) {
 		t.Error("expected qty for Memory to be in between")
 	}
-	ls.MemoryMax = lowqty
+	ls.Memory.Max = lowqty
 	if ls.BetweenMemory(test) {
 		t.Error("expected qty for Memory to not be in between")
 	}
@@ -96,12 +102,17 @@ func TestBetweenMemory(t *testing.T) {
 }
 
 func TestAdmit(t *testing.T) {
-	ls := LimitSentry{
-		MemoryMax: highqty,
-		MemoryMin: lowqty,
-		CPUMax:    highqty,
-		CPUMin:    lowqty,
+	c := Config{
+		Memory: MinMax{
+			Max: highqty,
+			Min: lowqty,
+		},
+		CPU: MinMax{
+			Max: highqty,
+			Min: lowqty,
+		},
 	}
+	ls := c.LoadSentry().(LimitSentry)
 	ar := v1beta1.AdmissionReview{
 		Request: &v1beta1.AdmissionRequest{
 			Object: runtime.RawExtension{
