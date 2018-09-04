@@ -4,7 +4,6 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jasonrichardsmith/sentry/config"
 	_ "github.com/jasonrichardsmith/sentry/healthz"
 	_ "github.com/jasonrichardsmith/sentry/limits"
@@ -29,7 +28,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	spew.Dump(config.DefaultConfig)
 	s := mux.New(config.DefaultConfig)
 	var ss *http.Server
 	if dev {
