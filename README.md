@@ -110,7 +110,7 @@ make e2etests
 
 ## Development
 
-To develop a new module, you can copy the [example](https://github.com/jasonrichardsmith/sentry/tree/example-and-typos/example) module.
+To develop a new module, you can copy the [example](https://github.com/jasonrichardsmith/sentry/tree/master/example) module.
 
 And then import it in the main.go
 ```go
@@ -129,10 +129,10 @@ description.expectation.yaml
 
 Anything not titled with "pass" as an "expectation" will be expected to fail.
 
-Then make sure your module is enabled in the [manifest.yaml](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/manifest.yaml).
+Then make sure your module is enabled in the [manifest.yaml](https://github.com/jasonrichardsmith/sentry/blob/master/manifest.yaml).
 ```yaml
 
-    example:
+    my_module:
       enabled: true
       ignoredNamespaces:
         - "kube-system"

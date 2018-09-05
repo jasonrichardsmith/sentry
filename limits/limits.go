@@ -2,17 +2,11 @@ package limits
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
-)
-
-var (
-	scheme = runtime.NewScheme()
-	codecs = serializer.NewCodecFactory(scheme)
 )
 
 const (
@@ -46,9 +40,8 @@ func (ls LimitSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1
 	log.Info("Checking limits are present")
 	raw := receivedAdmissionReview.Request.Object.Raw
 	pod := corev1.Pod{}
-	deserializer := codecs.UniversalDeserializer()
 	reviewResponse := v1beta1.AdmissionResponse{}
-	if _, _, err := deserializer.Decode(raw, nil, &pod); err != nil {
+	if err := sentry.Decode(raw, &pod); err != nil {
 		log.Error(err)
 		reviewResponse.Result = &metav1.Status{Message: err.Error()}
 		return &reviewResponse
