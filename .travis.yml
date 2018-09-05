@@ -20,6 +20,5 @@ before_install:
   - export PATH="$HOME/.kubeadm-dind-cluster:$PATH"
 script: 
   - "make $TEST_SUITE"
-  - "make $TEST_SUITE"
 after_success:
   - test -n "$TRAVIS_TAG" && make build && make push 
