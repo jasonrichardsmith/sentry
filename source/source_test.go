@@ -36,7 +36,7 @@ func TestType(t *testing.T) {
 
 func TestAdmit(t *testing.T) {
 	c := Config{
-		AllowedSources: []string{
+		Allowed: []string{
 			"this/is/allowed",
 		},
 	}
