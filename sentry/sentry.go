@@ -74,8 +74,7 @@ func (sh SentryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Info("Correct ContentType")
 	var admissionResponse *v1beta1.AdmissionResponse
 	receivedAdmissionReview := v1beta1.AdmissionReview{}
-	deserializer := codecs.UniversalDeserializer()
-	if _, _, err := deserializer.Decode(body, nil, &receivedAdmissionReview); err != nil {
+	if err := Decode(body, &receivedAdmissionReview); err != nil {
 		log.Error(err)
 		admissionResponse = admissionResponseError(err)
 	} else {
@@ -128,4 +127,10 @@ func NewSentryServerNoSSL(s Sentry) *http.Server {
 		},
 		Addr: ":8080",
 	}
+}
+
+func Decode(b []byte, o runtime.Object) error {
+	deserializer := codecs.UniversalDeserializer()
+	_, _, err := deserializer.Decode(b, nil, o)
+	return err
 }

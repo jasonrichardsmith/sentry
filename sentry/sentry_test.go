@@ -75,8 +75,7 @@ func TestSentryHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	deserializer := codecs.UniversalDeserializer()
-	_, _, err = deserializer.Decode(data, nil, &rar)
+	err = Decode(data, &rar)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,8 +99,7 @@ func TestSentryHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	deserializer = codecs.UniversalDeserializer()
-	_, _, err = deserializer.Decode(data, nil, &rar)
+	err = Decode(data, &rar)
 	if err != nil {
 		t.Fatal(err)
 	}
