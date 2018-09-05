@@ -11,7 +11,7 @@ limits:
     min: 1G
     max: 1G
 healthz:
-  enabled: true
+  enabled: false
   ignoredNamespaces:
     - "test1"
     - "test3"

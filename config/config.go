@@ -58,6 +58,7 @@ func (c *Config) Load() error {
 	if err != nil {
 		return err
 	}
+	enabled := make([]ModuleConfig, 0)
 	for _, mc := range c.Modules {
 		if v, ok := iconfig[mc.Name()]; ok {
 			cc := CommonConfig{}
@@ -79,9 +80,11 @@ func (c *Config) Load() error {
 				if err != nil {
 					return err
 				}
+				enabled = append(enabled, mc)
 			}
 		}
 	}
+	c.Modules = enabled
 	return nil
 }
 
