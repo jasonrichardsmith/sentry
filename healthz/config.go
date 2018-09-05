@@ -1,13 +1,25 @@
 package healthz
 
 import (
+	"github.com/jasonrichardsmith/sentry/config"
 	"github.com/jasonrichardsmith/sentry/sentry"
 )
 
-type Config struct {
-	sentry.Config `yaml:"-,inline"`
+const (
+	NAME = "healthz"
+)
+
+func init() {
+	config.Register(&Config{})
 }
 
-func (c *Config) LoadSentry() (sentry.Sentry, error) {
-	return HealthzSentry{}, nil
+type Config struct {
+}
+
+func (c *Config) Name() string {
+	return NAME
+}
+
+func (c *Config) LoadSentry() sentry.Sentry {
+	return HealthzSentry{}
 }

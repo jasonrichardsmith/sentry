@@ -1,16 +1,28 @@
 package source
 
 import (
+	"github.com/jasonrichardsmith/sentry/config"
 	"github.com/jasonrichardsmith/sentry/sentry"
 )
 
-type Config struct {
-	sentry.Config  `yaml:"-,inline"`
-	AllowedSources []string `yaml:"allowed"`
+const (
+	NAME = "source"
+)
+
+func init() {
+	config.Register(&Config{})
 }
 
-func (c *Config) LoadSentry() (sentry.Sentry, error) {
+type Config struct {
+	Allowed []string `mapstructure:"allowed"`
+}
+
+func (c *Config) Name() string {
+	return NAME
+}
+
+func (c *Config) LoadSentry() sentry.Sentry {
 	return SourceSentry{
-		allowedSources: c.AllowedSources,
-	}, nil
+		allowedSources: c.Allowed,
+	}
 }

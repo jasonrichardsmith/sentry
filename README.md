@@ -19,7 +19,7 @@ To enforce different configurations you can launch this admission controller und
 
 ### Limits
  
-Limits will insure all pods have limits for cpu and memory set and are within the range you provide.
+Limits will ensure all pods have limits for cpu and memory set and are within the range you provide.
 
 ```yaml
 limits:
@@ -37,7 +37,7 @@ limits:
  
 ### Source
 
-Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To insure your domain is not read as a subdomain, it is best to end your domain with a "/".
+Source ensures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To ensure your domain is not read as a subdomain, it is best to end your domain with a "/".
 
 By listing the entire image path with or without tag, you can allow specific images from a repository. So "gcr.io/google_containers/pause-amd64" would only allow the pause container.  Due to the matching strategy this also means "gcr.io/google_containers/pause-amd64foo" would also pass.
 
@@ -55,7 +55,7 @@ source:
 
 ### Healthz
  
-Healthz insures liveliness and readiness probes are set.
+Healthz ensures liveliness and readiness probes are set.
 
 ```yaml
 healthz:
@@ -68,7 +68,7 @@ healthz:
  
 ### Tags
 
-Tags insures no containers launch with 'latest' or with no tag set.
+Tags ensures no containers launch with 'latest' or with no tag set.
 
 ```yaml
 tags:
@@ -88,7 +88,7 @@ $ minikube start --kubernetes-version v1.11.1
 $ make minikube
 ```
 
-Please use Kubernetes version >= 1.1.0
+Please use Kubernetes version >= 1.10
 
 This will build a container from source on your minikube server.
 
@@ -110,57 +110,16 @@ make e2etests
 
 ## Development
 
-To develop a new module, you can copy over the [example](https://github.com/jasonrichardsmith/sentry/tree/example-and-typos/example) module.
+To develop a new module, you can copy the [example](https://github.com/jasonrichardsmith/sentry/tree/example-and-typos/example) module.
 
-It will need to be added to the [mux/config.go](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/mux/config.go).
-
+And then import it in the main.go
 ```go
-
-type Config struct {
-	Limits  limits.Config  `yaml:"limits"`
-	Healthz healthz.Config `yaml:"healthz"`
-	Source  source.Config  `yaml:"source"`
-	Tags    tags.Config    `yaml:"tags"`
-	Example example.Config `yaml:"example"`
-}
-
-func New() *Config {
-	l := limits.Config{}
-	h := healthz.Config{}
-	i := tags.Config{}
-	s := source.Config{}
-	e := example.Config{}
-	return &Config{
-		Limits:  l,
-		Healthz: h,
-		Tags:    i,
-		Source:  s,
-		Example: e,
-	}
-}
+import(
+	_ "github.com/jasonrichardsmith/sentry/my_module"
+)
 ```
 
-and to the [mux/mux.go](https://github.com/jasonrichardsmith/sentry/blob/example-and-typos/mux/mux.go) NewFromConfig function
-
-```go
-
-	if c.Example.Enabled {
-		log.Info("Example enabled loading")
-		s, err := c.Example.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Source.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
-	}
-```
-
-Hopefully [config loading will be improved](https://github.com/jasonrichardsmith/sentry/issues/2) in the near future.
-
+Configuration is loaded using [mapstructure](https://github.com/mitchellh/mapstructure).  If you need have special decoding for your configuration you can register a decoder, please reference the limits module decoding hook in [limits/config.go](https://github.com/jasonrichardsmith/sentry/blob/master/limits/config.go).
 
 You can add e2e tests by adding a folder for your module in test-manifests, and adding manifests named in the following convention.
 

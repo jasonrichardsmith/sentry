@@ -1,6 +1,5 @@
 ---
 limits:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test2"
@@ -12,14 +11,18 @@ limits:
     min: 1G
     max: 1G
 healthz:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test1"
     - "test3"
 tags:
-  type: Pod
   enabled: true
   ignoredNamespaces:
     - "test1"
     - "test2"
+source:
+  enabled: true
+  ignoredNamespaces:
+    - "test1"
+  allowed:
+    - "test"
