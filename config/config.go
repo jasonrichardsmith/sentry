@@ -27,8 +27,8 @@ type ModuleConfig interface {
 }
 
 type CommonConfig struct {
-	Enabled           bool     `yaml:"enabled"`
-	IgnoredNamespaces []string `yaml:"ignoredNamespaces"`
+	Enabled           bool     `mapstructure:"enabled"`
+	IgnoredNamespaces []string `mapstructure:"ignoredNamespaces"`
 }
 
 type Config struct {

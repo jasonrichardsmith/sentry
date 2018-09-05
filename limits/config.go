@@ -18,13 +18,13 @@ func init() {
 }
 
 type Config struct {
-	CPU    MinMax `yaml:"cpu"`
-	Memory MinMax `yaml:"memory"`
+	CPU    MinMax `mapstructure:"cpu"`
+	Memory MinMax `mapstructure:"memory"`
 }
 
 type MinMax struct {
-	Min resource.Quantity `yaml:"min"`
-	Max resource.Quantity `yaml:"max"`
+	Min resource.Quantity `mapstructure:"min"`
+	Max resource.Quantity `mapstructure:"max"`
 }
 
 func (c *Config) Name() string {

@@ -114,13 +114,12 @@ To develop a new module, you can copy the [example](https://github.com/jasonrich
 
 And then import it in the main.go
 ```go
-
 import(
-	_ "github.com/jasonrichardsmith/sentry/healthz"
-
+	_ "github.com/jasonrichardsmith/sentry/my_module"
 )
-
 ```
+
+Configuration is loaded using [mapstructure](https://github.com/mitchellh/mapstructure).  If you need have special decoding for your configuration you can register a decoder, please reference the limits module decoding hook in [limits/config.go](https://github.com/jasonrichardsmith/sentry/blob/master/limits/config.go).
 
 You can add e2e tests by adding a folder for your module in test-manifests, and adding manifests named in the following convention.
 

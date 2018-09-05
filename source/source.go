@@ -15,7 +15,7 @@ var (
 )
 
 const (
-	DomainsUnappovedDomain = "DomainsSentry: pod rejected because image is not in allowed source"
+	SourceUnappoved = "SourceSentry: pod rejected because image is not in allowed list"
 )
 
 type SourceSentry struct {
@@ -39,7 +39,7 @@ func (ss SourceSentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v
 	}
 	reviewResponse.Allowed = true
 	if !ss.checkImageDomainAllowed(pod) {
-		reviewResponse.Result = &metav1.Status{Message: DomainsUnappovedDomain}
+		reviewResponse.Result = &metav1.Status{Message: SourceUnappoved}
 		reviewResponse.Allowed = false
 		return &reviewResponse
 	}

@@ -14,7 +14,7 @@ func init() {
 }
 
 type Config struct {
-	AllowedSources []string `yaml:"allowed"`
+	Allowed []string `mapstructure:"allowed"`
 }
 
 func (c *Config) Name() string {
@@ -23,6 +23,6 @@ func (c *Config) Name() string {
 
 func (c *Config) LoadSentry() sentry.Sentry {
 	return SourceSentry{
-		allowedSources: c.AllowedSources,
+		allowedSources: c.Allowed,
 	}
 }
