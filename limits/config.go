@@ -1,36 +1,47 @@
 package limits
 
 import (
+	"reflect"
+
+	"github.com/jasonrichardsmith/sentry/config"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
+const (
+	NAME = "limits"
+)
+
+func init() {
+	config.Decoder(NAME, QtyHookFunc)
+	config.Register(&Config{})
+}
+
 type Config struct {
-	CPU           MinMax `yaml:"cpu"`
-	Memory        MinMax `yaml:"memory"`
-	sentry.Config `yaml:"-,inline"`
+	CPU    MinMax `mapstructure:"cpu"`
+	Memory MinMax `mapstructure:"memory"`
 }
 
 type MinMax struct {
-	Min string `yaml:"min"`
-	Max string `yaml:"max"`
+	Min resource.Quantity `mapstructure:"min"`
+	Max resource.Quantity `mapstructure:"max"`
 }
 
-func (c *Config) LoadSentry() (sentry.Sentry, error) {
-	var ls LimitSentry
-	var err error
-	ls.MemoryMax, err = resource.ParseQuantity(c.Memory.Max)
-	if err != nil {
-		return ls, err
+func (c *Config) Name() string {
+	return NAME
+}
+
+func (c *Config) LoadSentry() sentry.Sentry {
+	return LimitSentry{c}
+}
+
+func QtyHookFunc(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
+	if f.Kind() != reflect.String {
+		return data, nil
 	}
-	ls.MemoryMin, err = resource.ParseQuantity(c.Memory.Min)
-	if err != nil {
-		return ls, err
+	if t != reflect.TypeOf(resource.Quantity{}) {
+		return data, nil
 	}
-	ls.CPUMin, err = resource.ParseQuantity(c.CPU.Min)
-	if err != nil {
-		return ls, err
-	}
-	ls.CPUMax, err = resource.ParseQuantity(c.CPU.Max)
-	return ls, err
+	return resource.ParseQuantity(data.(string))
+
 }

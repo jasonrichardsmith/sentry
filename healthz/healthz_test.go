@@ -40,10 +40,7 @@ func TestType(t *testing.T) {
 }
 func TestAdmit(t *testing.T) {
 	c := Config{}
-	hs, err := c.LoadSentry()
-	if err != nil {
-		log.Fatal(err)
-	}
+	hs := c.LoadSentry()
 	ar := v1beta1.AdmissionReview{
 		Request: &v1beta1.AdmissionRequest{
 			Object: runtime.RawExtension{

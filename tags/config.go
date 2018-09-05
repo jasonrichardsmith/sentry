@@ -1,13 +1,25 @@
 package tags
 
 import (
+	"github.com/jasonrichardsmith/sentry/config"
 	"github.com/jasonrichardsmith/sentry/sentry"
 )
 
-type Config struct {
-	sentry.Config `yaml:"-,inline"`
+const (
+	NAME = "tags"
+)
+
+func init() {
+	config.Register(&Config{})
 }
 
-func (c *Config) LoadSentry() (sentry.Sentry, error) {
-	return TagsSentry{}, nil
+type Config struct {
+}
+
+func (c *Config) Name() string {
+	return NAME
+}
+
+func (c *Config) LoadSentry() sentry.Sentry {
+	return TagsSentry{}
 }

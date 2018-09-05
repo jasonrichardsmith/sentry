@@ -2,6 +2,7 @@ package mux
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/jasonrichardsmith/sentry/config"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 )
@@ -15,76 +16,18 @@ type SentryMux struct {
 	Sentries []sentryModule
 }
 
-func NewFromConfig(c Config) (SentryMux, error) {
+func New(c config.Config) SentryMux {
 	sm := SentryMux{
 		Sentries: make([]sentryModule, 0),
 	}
-	if c.Limits.Enabled {
-		log.Info("Limits enabled loading")
-		s, err := c.Limits.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Limits.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
+	for _, v := range c.Modules {
+		sm.Sentries = append(sm.Sentries,
+			sentryModule{
+				v.LoadSentry(),
+				c.Ignored(v.Name()),
+			})
 	}
-	if c.Healthz.Enabled {
-		log.Info("Healthz enabled loading")
-		s, err := c.Healthz.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Healthz.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
-	}
-	if c.Tags.Enabled {
-		log.Info("Tags enabled loading")
-		s, err := c.Tags.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Tags.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
-	}
-	if c.Source.Enabled {
-		log.Info("Source enabled loading")
-		s, err := c.Source.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Source.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
-	}
-	if c.Example.Enabled {
-		log.Info("Example enabled loading")
-		s, err := c.Example.LoadSentry()
-		if err != nil {
-			return sm, err
-		}
-		mod := sentryModule{
-			s,
-			c.Source.IgnoredNamespaces,
-		}
-		log.Info("Ignoring Namespaces ", mod.ignored)
-		sm.Sentries = append(sm.Sentries, mod)
-	}
-	return sm, nil
+	return sm
 }
 
 func (sm sentryModule) Ignore(namespace string) bool {

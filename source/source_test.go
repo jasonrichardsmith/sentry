@@ -36,14 +36,11 @@ func TestType(t *testing.T) {
 
 func TestAdmit(t *testing.T) {
 	c := Config{
-		AllowedSources: []string{
+		Allowed: []string{
 			"this/is/allowed",
 		},
 	}
-	is, err := c.LoadSentry()
-	if err != nil {
-		log.Fatal(err)
-	}
+	is := c.LoadSentry()
 	ar := v1beta1.AdmissionReview{
 		Request: &v1beta1.AdmissionRequest{
 			Object: runtime.RawExtension{

@@ -13,3 +13,5 @@ import:
   - pkg/apis/meta/v1
   - pkg/runtime
   - pkg/runtime/serializer
+- package: github.com/mitchellh/mapstructure
+  version: v1.0.0

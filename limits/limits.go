@@ -22,10 +22,7 @@ const (
 )
 
 type LimitSentry struct {
-	MemoryMin resource.Quantity
-	MemoryMax resource.Quantity
-	CPUMin    resource.Quantity
-	CPUMax    resource.Quantity
+	*Config
 }
 
 func (ls LimitSentry) Type() string {
@@ -33,14 +30,14 @@ func (ls LimitSentry) Type() string {
 }
 
 func (ls LimitSentry) BetweenCPU(q resource.Quantity) bool {
-	if ls.CPUMax.Cmp(q) >= 0 && ls.CPUMin.Cmp(q) <= 0 {
+	if ls.CPU.Max.Cmp(q) >= 0 && ls.CPU.Min.Cmp(q) <= 0 {
 		return true
 	}
 	return false
 }
 
 func (ls LimitSentry) BetweenMemory(q resource.Quantity) bool {
-	if ls.MemoryMax.Cmp(q) >= 0 && ls.MemoryMin.Cmp(q) <= 0 {
+	if ls.Memory.Max.Cmp(q) >= 0 && ls.Memory.Min.Cmp(q) <= 0 {
 		return true
 	}
 	return false
