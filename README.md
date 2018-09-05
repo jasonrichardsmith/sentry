@@ -19,7 +19,7 @@ To enforce different configurations you can launch this admission controller und
 
 ### Limits
  
-Limits will insure all pods have limits for cpu and memory set and are within the range you provide.
+Limits will ensure all pods have limits for cpu and memory set and are within the range you provide.
 
 ```yaml
 limits:
@@ -37,7 +37,7 @@ limits:
  
 ### Source
 
-Source insures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To insure your domain is not read as a subdomain, it is best to end your domain with a "/".
+Source ensures images are only pulled from allowed sources.  This is a very simple string match.  This will only check if your image string starts with strings provided in the config.  To ensure your domain is not read as a subdomain, it is best to end your domain with a "/".
 
 By listing the entire image path with or without tag, you can allow specific images from a repository. So "gcr.io/google_containers/pause-amd64" would only allow the pause container.  Due to the matching strategy this also means "gcr.io/google_containers/pause-amd64foo" would also pass.
 
@@ -55,7 +55,7 @@ source:
 
 ### Healthz
  
-Healthz insures liveliness and readiness probes are set.
+Healthz ensures liveliness and readiness probes are set.
 
 ```yaml
 healthz:
@@ -68,7 +68,7 @@ healthz:
  
 ### Tags
 
-Tags insures no containers launch with 'latest' or with no tag set.
+Tags ensures no containers launch with 'latest' or with no tag set.
 
 ```yaml
 tags:
