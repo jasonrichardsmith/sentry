@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-VERSION="0.1"
+VERSION="1.0.0-beta"
 REPO="jasonrichardsmith/sentry"
 HASH=$(shell git log --pretty=format:'%H' -n 1)
 
