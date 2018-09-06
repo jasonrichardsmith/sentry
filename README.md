@@ -77,6 +77,21 @@ tags:
     - "test1"
     - "test2"
 ```
+ 
+## Run
+
+This is the Beta release
+
+To run in your cluster, clone this respository, and edit [manifest.yaml](https://github.com/jasonrichardsmith/sentry/blob/master/manifest.yaml) to suit your requirements.
+
+Then you can run
+
+```bash
+$ make deployk8s
+```
+**Be Aware** : Like PodSecurityPolicies and RBAC, these rules are powerful, and will banhammer ANY pods that violate the rules.
+
+You have been warned...
 
 
 ## Try out sentry
@@ -109,7 +124,7 @@ make e2etests
 ```
 
 ## Development
-
+ 
 To develop a new module, you can copy the [example](https://github.com/jasonrichardsmith/sentry/tree/master/example) module.
 
 And then import it in the main.go

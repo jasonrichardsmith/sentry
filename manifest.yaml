@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: jasonrichardsmith/sentry:0.1
+          image: jasonrichardsmith/sentry:1.0.0-beta
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -87,10 +87,10 @@ data:
         - "test3"
         - "test4"
       cpu:
-        min: "1"
+        min: "0"
         max: "2"
       memory:
-        min: 1G
+        min: "0"
         max: 2G
     healthz:
       enabled: true
