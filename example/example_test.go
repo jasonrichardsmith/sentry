@@ -46,7 +46,7 @@ func TestAdmit(t *testing.T) {
 	}
 }
 
-func Test(t *testing.T) {
+func TestLoadSentry(t *testing.T) {
 	c := Config{}
 	s := c.LoadSentry()
 	if !reflect.DeepEqual(s, ExampleSentry{}) {

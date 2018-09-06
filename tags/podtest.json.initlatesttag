@@ -1,0 +1,16 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "spec": {
+        "containers": [
+            {
+		"image": "testimage:pass"
+            }
+        ],
+        "initContainers": [
+            {
+		"image": "testimage:latest"
+            }
+        ]
+    }
+}
