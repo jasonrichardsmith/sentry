@@ -1,0 +1,14 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "spec": {
+        "initContainers": [
+            {
+		"image": "this/is/notallowed/image:v1.1"
+            },
+            {
+		"image": "this/is/allowed/image2"
+            }
+        ]
+    }
+}
