@@ -68,3 +68,10 @@ func TestAdmit(t *testing.T) {
 		t.Fatal("Expecting json parse error")
 	}
 }
+
+func TestName(t *testing.T) {
+	c := Config{}
+	if c.Name() != "healthz" {
+		t.Fatal("Failed name test")
+	}
+}

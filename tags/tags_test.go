@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	podnotag     []byte
-	podlatesttag []byte
-	podpass      []byte
+	podnotag         []byte
+	podlatesttag     []byte
+	podinitnotag     []byte
+	podinitlatesttag []byte
+	podpass          []byte
 )
 
 func init() {
@@ -27,6 +29,14 @@ func init() {
 		log.Fatal(err)
 	}
 	podlatesttag, err = ioutil.ReadFile("podtest.json.latesttag")
+	if err != nil {
+		log.Fatal(err)
+	}
+	podinitnotag, err = ioutil.ReadFile("podtest.json.initnotag")
+	if err != nil {
+		log.Fatal(err)
+	}
+	podinitlatesttag, err = ioutil.ReadFile("podtest.json.initlatesttag")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,14 +68,31 @@ func TestAdmit(t *testing.T) {
 	if resp.Allowed {
 		t.Fatal("Expected no tag to fail")
 	}
+	ar.Request.Object.Raw = podinitnotag
+	resp = is.Admit(ar)
+	if resp.Allowed {
+		t.Fatal("Expected init no tag to fail")
+	}
 	ar.Request.Object.Raw = podlatesttag
 	resp = is.Admit(ar)
 	if resp.Allowed {
 		t.Fatal("Expected latest tag to fail")
 	}
+	ar.Request.Object.Raw = podinitlatesttag
+	resp = is.Admit(ar)
+	if resp.Allowed {
+		t.Fatal("Expected init latest tag to fail")
+	}
 	ar.Request.Object.Raw = podpass[0:5]
 	resp = is.Admit(ar)
 	if !strings.Contains(resp.Result.Message, "json parse error") {
 		t.Fatal("Expecting json parse error")
+	}
+}
+
+func TestName(t *testing.T) {
+	c := Config{}
+	if c.Name() != "tags" {
+		t.Fatal("Failed name test")
 	}
 }

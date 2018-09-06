@@ -1,6 +1,7 @@
 package example
 
 import (
+	"reflect"
 	"testing"
 
 	"k8s.io/api/admission/v1beta1"
@@ -42,5 +43,13 @@ func TestAdmit(t *testing.T) {
 	resp = s.Admit(ar)
 	if resp.Allowed {
 		t.Fatal("expected passing from failed decode")
+	}
+}
+
+func TestLoadSentry(t *testing.T) {
+	c := Config{}
+	s := c.LoadSentry()
+	if !reflect.DeepEqual(s, ExampleSentry{}) {
+		t.Fatal("Sentry mismatch")
 	}
 }
