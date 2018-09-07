@@ -121,12 +121,6 @@ data:
         - "kube-system"
     nslabels:
       enabled: true
-      ignoredNamespaces:
-        - "kube-system"
-        - "test1"
-        - "test2" 
-        - "test3"
-        - "test4"
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
