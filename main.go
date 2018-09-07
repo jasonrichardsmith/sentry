@@ -7,6 +7,7 @@ import (
 	"github.com/jasonrichardsmith/sentry/config"
 	_ "github.com/jasonrichardsmith/sentry/healthz"
 	_ "github.com/jasonrichardsmith/sentry/limits"
+	_ "github.com/jasonrichardsmith/sentry/nslabels"
 	_ "github.com/jasonrichardsmith/sentry/source"
 	_ "github.com/jasonrichardsmith/sentry/tags"
 

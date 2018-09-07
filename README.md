@@ -78,6 +78,18 @@ tags:
     - "test2"
 ```
  
+### NsLabels
+
+NsLabels ensures all namespaces have labels, so you can enforce NetworkSecurityPolicies.
+
+```yaml
+nslabels:
+  enabled: true
+  ignoredNamespaces:
+    - "test1"
+    - "test2"
+```
+
 ## Run
 
 This is the Beta release
