@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io/ioutil"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	"github.com/mitchellh/mapstructure"
 
@@ -45,11 +46,9 @@ func New() Config {
 	}
 }
 
-func (c *Config) Load() error {
-	if !flag.Parsed() {
-		flag.Parse()
-	}
-	configbytes, err := ioutil.ReadFile(configfile)
+func (c *Config) Load(file string) error {
+	log.Infof("Loading config from %v", file)
+	configbytes, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
 	}
@@ -58,18 +57,24 @@ func (c *Config) Load() error {
 	if err != nil {
 		return err
 	}
+	log.Infof("Found %v configurations", len(iconfig))
 	enabled := make([]ModuleConfig, 0)
 	for _, mc := range c.Modules {
+		log.Infof("Checking for presence of %v", mc.Name())
 		if v, ok := iconfig[mc.Name()]; ok {
 			cc := CommonConfig{}
 			err := mapstructure.Decode(v, &cc)
 			if err != nil {
 				return err
 			}
+			log.Infof("Checking if %v is enabled", mc.Name())
 			if cc.Enabled {
+				log.Infof("%v enabled, loading config", mc.Name())
 				c.ignored[mc.Name()] = cc.IgnoredNamespaces
+				log.Infof("Ignored namespaces for of %v: %v", mc.Name(), cc.IgnoredNamespaces)
 				dc := mapstructure.DecoderConfig{Result: mc}
 				if cd, ok := c.decoders[mc.Name()]; ok {
+					log.Infof("%v decode hook found", mc.Name())
 					dc.DecodeHook = cd
 				}
 				d, err := mapstructure.NewDecoder(&dc)
@@ -89,7 +94,10 @@ func (c *Config) Load() error {
 }
 
 func Load() error {
-	return DefaultConfig.Load()
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+	return DefaultConfig.Load(configfile)
 }
 
 func (c *Config) Register(mc ModuleConfig) error {
