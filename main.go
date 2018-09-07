@@ -24,16 +24,21 @@ func init() {
 }
 
 func main() {
+	log.Info("Loading Config")
 	err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Info("Config loaded")
+	log.Info(config.DefaultConfig)
 	s := mux.New(config.DefaultConfig)
 	var ss *http.Server
 	if dev {
+		log.Info("Serving Sentry without TLS")
 		ss = sentry.NewSentryServerNoSSL(s)
 		log.Fatal(ss.ListenAndServe())
 	} else {
+		log.Info("Starting new Sentry Server")
 		ss, err = sentry.NewSentryServer(s)
 		if err != nil {
 			log.Fatal(err)

@@ -44,7 +44,7 @@ func (d DisabledModuleConfig) Name() string              { return "healthz" }
 
 func TestLoad(t *testing.T) {
 	c := New()
-	err := c.Load()
+	err := c.Load(configfile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,13 +53,13 @@ func TestLoad(t *testing.T) {
 	}
 	c = New()
 	c.Register(FakeModuleConfig{})
-	err = c.Load()
+	err = c.Load(configfile)
 	if err == nil {
 		t.Fatal("expect pointer error")
 	}
 	c = New()
 	c.Register(&FakeModuleConfig{})
-	err = c.Load()
+	err = c.Load(configfile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,29 +74,26 @@ func TestLoad(t *testing.T) {
 	}
 	c = New()
 	c.Register(&DisabledModuleConfig{})
-	err = c.Load()
+	err = c.Load(configfile)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(c.Modules) != 0 {
 		t.Fatal("Expected no module loaded")
 	}
-
-	configfile = "config.yaml.fail"
-	err = c.Load()
+	err = c.Load("config.yaml.fail")
 	if err == nil {
 		t.Fatal("Expected yaml Unmarshal error")
 	}
 }
 
 func TestDefaultLoad(t *testing.T) {
-	configfile = "config.yaml"
 	err := Load()
 	if err != nil {
 		t.Fatal(err)
 	}
 	c := New()
-	err = c.Load()
+	err = c.Load(configfile)
 	if err != nil {
 		t.Fatal(err)
 	}
