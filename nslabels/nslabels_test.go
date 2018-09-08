@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"reflect"
+	"strings"
 	"testing"
 
 	"k8s.io/api/admission/v1beta1"
@@ -11,9 +12,8 @@ import (
 )
 
 var (
-	faildecode = "{"
-	nspass     []byte
-	nsfail     []byte
+	nspass []byte
+	nsfail []byte
 )
 
 func init() {
@@ -59,6 +59,11 @@ func TestAdmit(t *testing.T) {
 	resp = s.Admit(ar)
 	if resp.Allowed {
 		t.Fatal("expected failed review")
+	}
+	ar.Request.Object.Raw = nsfail[0:1]
+	resp = s.Admit(ar)
+	if !strings.Contains(resp.Result.Message, "json parse error") {
+		t.Fatal("Expecting json parse error")
 	}
 }
 
