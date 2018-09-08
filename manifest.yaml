@@ -121,6 +121,7 @@ data:
         - "kube-system"
     nslabels:
       enabled: true
+      ignoredNamespaces:
         - "kube-system"
         - "test5"
 ---
