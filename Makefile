@@ -1,7 +1,7 @@
 .PHONY: build buildhash minikube minikubecontext push pushhash dep test goveralls deployk8s deploydindk8s e2etests travise2e dindup buildpushhash
 SHELL=/bin/bash -eo pipefail
 .DEFAULT_GOAL := build
-VERSION="1.0.0-beta"
+VERSION="1.1.0-beta"
 REPO="jasonrichardsmith/sentry"
 HASH=$(shell git log --pretty=format:'%H' -n 1)
 
