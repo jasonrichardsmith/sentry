@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"net/http"
+	"os"
+	"os/signal"
 
 	"github.com/jasonrichardsmith/sentry/config"
 	_ "github.com/jasonrichardsmith/sentry/healthz"
@@ -34,6 +37,18 @@ func main() {
 	log.Info(config.DefaultConfig)
 	s := mux.New(config.DefaultConfig)
 	var ss *http.Server
+
+	idleConnsClosed := make(chan struct{})
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		<-sigint
+		if err := ss.Shutdown(context.Background()); err != nil {
+			log.Printf("Sentry server Shutdown: %v", err)
+		}
+		close(idleConnsClosed)
+	}()
+
 	if dev {
 		log.Info("Serving Sentry without TLS")
 		ss = sentry.NewSentryServerNoSSL(s)
@@ -46,4 +61,5 @@ func main() {
 		}
 		log.Fatal(ss.ListenAndServeTLS("", ""))
 	}
+	<-idleConnsClosed
 }
