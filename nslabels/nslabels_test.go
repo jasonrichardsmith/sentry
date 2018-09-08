@@ -65,6 +65,12 @@ func TestAdmit(t *testing.T) {
 	if !strings.Contains(resp.Result.Message, "json parse error") {
 		t.Fatal("Expecting json parse error")
 	}
+	ar.Request.Object.Raw = nsfail
+	s.ignored = []string{"test"}
+	resp = s.Admit(ar)
+	if !resp.Allowed {
+		t.Fatal("expected ignored namespace")
+	}
 }
 
 func TestLoadSentry(t *testing.T) {

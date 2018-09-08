@@ -12,10 +12,25 @@ var (
 	NoLabelsPresent = "NsLabelsSentry: Namespace rejected because of no labels"
 )
 
-type Sentry struct{}
+type Sentry struct {
+	ignored []string
+}
 
 func (s Sentry) Type() string {
 	return "Namespace"
+}
+
+func (s Sentry) Ignore(namespace string) bool {
+	log.Infof("Checking to see ignored namespace %v", namespace)
+	for _, ignore := range s.ignored {
+		if ignore == namespace {
+			return true
+			log.Infof("Namespace %v ignored", namespace)
+
+		}
+	}
+	log.Infof("Namespace %v not ignored", namespace)
+	return false
 }
 
 func (s Sentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
@@ -29,6 +44,9 @@ func (s Sentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.
 		return &reviewResponse
 	}
 	reviewResponse.Allowed = true
+	if s.Ignore(ns.ObjectMeta.GetName()) {
+		return &reviewResponse
+	}
 	if len(ns.ObjectMeta.Labels) == 0 {
 		log.Infof("Rejecting namespace %v because of no label", ns.ObjectMeta.GetName())
 		reviewResponse.Allowed = false

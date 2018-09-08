@@ -14,6 +14,7 @@ func init() {
 }
 
 type Config struct {
+	IgnoredNamespaces []string `mapstructure:"ignoredNamespaces"`
 }
 
 func (c *Config) Name() string {
@@ -21,5 +22,5 @@ func (c *Config) Name() string {
 }
 
 func (c *Config) LoadSentry() sentry.Sentry {
-	return Sentry{}
+	return Sentry{c.IgnoredNamespaces}
 }

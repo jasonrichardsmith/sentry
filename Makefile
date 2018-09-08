@@ -37,6 +37,8 @@ deploydindk8s: deployk8s
 	kubectl rollout status -w -n sentry deployment/sentry
 e2etests:
 	cd test-manifests && ./e2etest.py
+cleane2e:
+	cd test-manifests && ./e2eclean.py
 travise2e:
 	./dind-cluster-v1.10.sh up 
 	${MAKE} buildhash
