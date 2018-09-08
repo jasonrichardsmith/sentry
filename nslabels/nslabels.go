@@ -2,7 +2,6 @@ package nslabels
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jasonrichardsmith/sentry/sentry"
 	"k8s.io/api/admission/v1beta1"
 	corev1 "k8s.io/api/core/v1"
@@ -44,11 +43,12 @@ func (s Sentry) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.
 		reviewResponse.Result = &metav1.Status{Message: err.Error()}
 		return &reviewResponse
 	}
+	log.Infof("Received namespace %v with labels %v", ns.ObjectMeta.GetName(), ns.ObjectMeta.Labels)
 	reviewResponse.Allowed = true
 	if s.Ignore(ns.ObjectMeta.GetName()) {
+		log.Infof("Namespace %v is ignored", ns.ObjectMeta.GetName())
 		return &reviewResponse
 	}
-	spew.Dump(ns.ObjectMeta.Labels)
 	if ns.ObjectMeta.Labels == nil || len(ns.ObjectMeta.Labels) == 0 {
 		log.Infof("Rejecting namespace %v because of no label", ns.ObjectMeta.GetName())
 		reviewResponse.Allowed = false

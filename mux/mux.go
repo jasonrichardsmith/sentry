@@ -47,17 +47,17 @@ func (sm SentryMux) Type() string {
 }
 func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 	log.Infof("Received request of kind %v", receivedAdmissionReview.Request.Kind.Kind)
-	log.Infof("Itterating over %v sentries.", receivedAdmissionReview.Request.Kind.Kind, len(sm.Sentries))
-	for k, sm := range sm.Sentries {
+	log.Infof("Itterating over %v sentries.", receivedAdmissionReview.Request.Kind.Kind)
+	for _, sm := range sm.Sentries {
 		if receivedAdmissionReview.Request.Kind.Kind == sm.Type() {
 			if !sm.Ignore(receivedAdmissionReview.Request.Namespace) {
-				log.Infof("Running admit for %v", k)
+				log.Infof("Running admit for %v", sm.Type())
 				ar := sm.Admit(receivedAdmissionReview)
 				if !ar.Allowed {
-					log.Infof("Not allowed by %v", k)
+					log.Infof("Not allowed by %v", sm.Type())
 					return ar
 				}
-				log.Infof("Allowed by %v", k)
+				log.Infof("Allowed by %v", sm.Type())
 			}
 		}
 
@@ -65,5 +65,4 @@ func (sm SentryMux) Admit(receivedAdmissionReview v1beta1.AdmissionReview) *v1be
 	reviewResponse := v1beta1.AdmissionResponse{}
 	reviewResponse.Allowed = true
 	return &reviewResponse
-
 }
