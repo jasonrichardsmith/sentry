@@ -119,6 +119,11 @@ data:
       enabled: true
       ignoredNamespaces:
         - "kube-system"
+    nslabels:
+      enabled: true
+      ignoredNamespaces:
+        - "kube-system"
+        - "test5"
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
@@ -136,5 +141,5 @@ webhooks:
       - operations: ["CREATE","UPDATE"]
         apiGroups: [""]
         apiVersions: ["v1"]
-        resources: ["pods"]
+        resources: ["pods", "namespaces"]
     failurePolicy: Ignore

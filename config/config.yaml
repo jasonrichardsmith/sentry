@@ -26,3 +26,8 @@ source:
     - "test1"
   allowed:
     - "test"
+nslabels:
+  enabled: true
+  ignoredNamespaces:
+    - "test1"
+    - "test2"
