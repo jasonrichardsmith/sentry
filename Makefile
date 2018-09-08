@@ -19,11 +19,9 @@ push:
 	docker push ${REPO}:${VERSION}
 pushhash:
 	docker push ${REPO}:${HASH}
-dep:
-	glide install
-test: dep
+test:
 	go test ./...
-goveralls: dep
+goveralls:
 	go test -coverprofile=coverage.out ./...
 	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
@@ -40,7 +38,7 @@ e2etests:
 travise2e:
 	./dind-cluster-v1.10.sh up 
 	${MAKE} buildhash
-	echo "${DOCKERPASSWORD}" | docker login -u "${DOCKERUSERNAME}" --password-stdin
 	${MAKE} pushhash
 	${MAKE} deploydindk8s
 	${MAKE} e2etests
+buildpushhash: | buildhash pushhash
