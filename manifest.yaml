@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: jasonrichardsmith/sentry:1.1.0-beta
+          image: jasonrichardsmith/sentry:${TAG}
           imagePullPolicy: IfNotPresent
           resources:
             limits:

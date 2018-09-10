@@ -22,13 +22,13 @@ goveralls:
 	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
 deployk8s:
+	$(eval export TAG)
 	kubectl apply -f sentry-ns.yaml
 	./gen-cert.sh
 	./ca-bundle.sh
 	kubectl apply -f manifest-ca.yaml
 
-deploydindk8s: deployk8s
-	kubectl set image deployment/sentry -n sentry webhook=jasonrichardsmith/sentry:${HASH}
+deploydindk8s: hashtag deployk8s
 	kubectl rollout status -w -n sentry deployment/sentry
 
 e2etests:
