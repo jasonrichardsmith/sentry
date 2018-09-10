@@ -80,7 +80,7 @@ tags:
  
 ### NsLabels
 
-NsLabels ensures all namespaces have labels, so you can enforce NetworkSecurityPolicies.
+NsLabels ensures all namespaces have labels, so you can enforce NetworkPolicies.
 
 ```yaml
 nslabels:
