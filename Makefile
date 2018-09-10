@@ -1,24 +1,20 @@
-.PHONY: build buildhash minikube minikubecontext push pushhash dep test goveralls deployk8s deploydindk8s e2etests travise2e dindup buildpushhash
+.PHONY: build minikube minikubecontext push test goveralls deployk8s deploydindk8s e2etests e2eclean travise2e dindup buildpushhash
 SHELL=/bin/bash -eo pipefail
 .DEFAULT_GOAL := build
-VERSION="1.1.0-beta"
-REPO="jasonrichardsmith/sentry"
+REPO=jasonrichardsmith/sentry
+VERSION=$(shell cat VERSION)
 HASH=$(shell git log --pretty=format:'%H' -n 1)
-
+TAG=${VERSION}
 build:
-	docker build --no-cache -t ${REPO}:${VERSION} .
-	
-buildhash:
-	docker build --no-cache -t ${REPO}:${HASH} .
+	docker build --no-cache -t ${REPO}:${TAG} .
+
+push:
+	docker push ${REPO}:${TAG}
 
 minikube: minikubecontext build
 
 minikubecontext:
 	eval $(shell minikube docker-env)
-push:
-	docker push ${REPO}:${VERSION}
-pushhash:
-	docker push ${REPO}:${HASH}
 test:
 	go test ./...
 goveralls:
@@ -30,14 +26,22 @@ deployk8s:
 	./gen-cert.sh
 	./ca-bundle.sh
 	kubectl apply -f manifest-ca.yaml
+
 deploydindk8s: deployk8s
 	kubectl set image deployment/sentry -n sentry webhook=jasonrichardsmith/sentry:${HASH}
 	kubectl rollout status -w -n sentry deployment/sentry
+
 e2etests:
 	cd test-manifests && ./e2etest.py
+e2eclean:
+	cd test-manifests && ./e2eclean.py
+
 travise2e: | dindup deploydindk8s e2etests
 
 dindup:
 	./dind-cluster-v1.10.sh up 
 
-buildpushhash: | buildhash pushhash
+hashtag:
+	$(eval export TAG=${HASH})
+
+buildpushhash: | hashtag build push
