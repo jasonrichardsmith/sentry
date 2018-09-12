@@ -59,7 +59,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Fatal(ss.ListenAndServeTLS(":8080", ""))
+		log.Fatal(ss.ListenAndServeTLS("", ""))
 	}
 	<-idleConnsClosed
 }
