@@ -116,7 +116,7 @@ func NewSentryServer(s Sentry) (*http.Server, error) {
 		Certificates: []tls.Certificate{sCert},
 	}
 	server.TLSConfig = tlsConfig
-	server.Addr = ":443"
+	server.Addr = ":8080"
 	return server, nil
 }
 

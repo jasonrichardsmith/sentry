@@ -10,6 +10,7 @@ spec:
   ports:
   - name: webhook
     port: 443
+    targetPort: 8080
   selector:
     name: sentry 
 ---
@@ -50,17 +51,19 @@ spec:
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 443
+              port: 8080
               scheme: HTTPS
             initialDelaySeconds: 1
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 443
+              port: 8080
               scheme: HTTPS
             initialDelaySeconds: 5
             periodSeconds: 10
+          securityContext:
+            readOnlyRootFilesystem: true
       volumes:
         - name: webhook-certs
           secret:
