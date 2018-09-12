@@ -61,6 +61,8 @@ spec:
               scheme: HTTPS
             initialDelaySeconds: 5
             periodSeconds: 10
+          securityContext:
+            readOnlyRootFilesystem: true
       volumes:
         - name: webhook-certs
           secret:
