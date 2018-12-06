@@ -12,6 +12,14 @@ const (
 	SourceUnappoved = "SourceSentry: pod rejected because image is not in allowed list"
 )
 
+func Min(a, b int) int {
+	if a > b {
+		return b
+	} else {
+		return a
+	}
+}
+
 type SourceSentry struct {
 	allowedSources []string
 }
@@ -55,7 +63,7 @@ func (ss *SourceSentry) checkImageDomainAllowedContainer(cs []corev1.Container) 
 	for _, c := range cs {
 		pass := false
 		for _, v := range ss.allowedSources {
-			if c.Image[0:len(v)] == v {
+			if c.Image[0:Min(len(v), len(c.Image))] == v {
 				log.Infof("Found approved source %v for container %v", v, c.Image)
 				pass = true
 			}
