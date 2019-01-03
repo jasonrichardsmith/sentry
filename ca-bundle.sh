@@ -4,6 +4,5 @@ set -o nounset
 set -o pipefail
 
 ROOT=$(cd $(dirname $0)/../../; pwd)
-
-export CA_BUNDLE=$(kubectl get configmap -n kube-system extension-apiserver-authentication -o=jsonpath='{.data.client-ca-file}' | base64 | tr -d '\n')
+export CA_BUNDLE=$(kubectl config view --raw --flatten -o json | jq -r '.clusters[] | select(.name == "'$(kubectl config current-context)'") | .cluster."certificate-authority-data"')
 cat manifest.yaml | envsubst > manifest-ca.yaml
